@@ -1,5 +1,5 @@
 {
-  "name": "kindloop",
+  "name": "ripple",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "dependencies": {
@@ -31,6 +31,8 @@
   },
   "devDependencies": {
     "@types/react": "~19.2.2",
+    "eslint": "^9.39.4",
+    "eslint-config-expo": "~56.0.4",
     "typescript": "~6.0.3"
   },
   "scripts": {

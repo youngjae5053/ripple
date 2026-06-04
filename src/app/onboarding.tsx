@@ -2,135 +2,103 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
+import {
+  RippleButton,
+  RippleCard,
+  RippleScreen,
+  rippleColors,
+  rippleCopy,
+} from "@/components/ripple-ui";
+
 const pages = [
   {
-    title: "One moment.",
-    subtitle: "A message.\nA favor.\nA memory.",
-    visual: "●",
+    title: "Start a moment.",
+    body: "One photo, one line, one place. That is enough to begin.",
+    path: ["You", "Friend", "?"],
   },
   {
     title: "Pass it on.",
-    subtitle: "Only if it feels right.",
-    visual: "●  →  ●",
+    body: "A Ripple only moves when someone chooses to carry it forward.",
+    path: ["Seoul", "Tokyo", "?"],
   },
   {
-    title: "A ripple begins.",
-    subtitle: "One moment becomes many.",
-    visual: "●  →  ●  →  ●",
-  },
-  {
-    title: "Where will it go?",
-    subtitle: "Seoul\n↓\nTokyo\n↓\nSydney\n↓\n?",
-    visual: "",
+    title: "See how far it goes.",
+    body: "Every stop adds a new place to the Journey.",
+    path: ["Seoul", "Tokyo", "Mexico City"],
   },
 ];
 
 export default function OnboardingScreen() {
   const router = useRouter();
   const [page, setPage] = useState(0);
-
   const current = pages[page];
   const isLast = page === pages.length - 1;
 
   return (
-    <View style={styles.root}>
-      <View pointerEvents="none" style={[styles.blob, styles.blobOne]} />
-      <View pointerEvents="none" style={[styles.blob, styles.blobTwo]} />
-      <View pointerEvents="none" style={[styles.blob, styles.blobThree]} />
+    <RippleScreen scroll={false} contentStyle={styles.phone}>
+      <View style={styles.top}>
+        <Text style={styles.brand}>{rippleCopy.name}</Text>
+        <Text style={styles.step}>{page + 1}/{pages.length}</Text>
+      </View>
 
-      <View style={styles.phone}>
-        <View style={styles.top}>
-          <Text style={styles.brand}>Ripple</Text>
-          <Text style={styles.step}>{page + 1}/4</Text>
-        </View>
-
-        <View style={styles.center}>
-          {current.visual ? <Text style={styles.visual}>{current.visual}</Text> : null}
-
+      <View style={styles.center}>
+        <RippleCard style={styles.storyCard}>
           <Text style={styles.title}>{current.title}</Text>
-          <Text style={styles.subtitle}>{current.subtitle}</Text>
-        </View>
-
-        <View style={styles.bottom}>
-          <View style={styles.dots}>
-            {pages.map((_, index) => (
-              <View
-                key={index}
-                style={[styles.dot, index === page && styles.activeDot]}
-              />
+          <Text style={styles.body}>{current.body}</Text>
+          <View style={styles.path}>
+            {current.path.map((item, index) => (
+              <View key={`${item}-${index}`} style={styles.pathStep}>
+                <Text style={styles.pathText}>{item}</Text>
+                {index < current.path.length - 1 ? (
+                  <Text style={styles.pathArrow}>↓</Text>
+                ) : null}
+              </View>
             ))}
           </View>
-
-          <Pressable
-            style={styles.primaryButton}
-            onPress={() => {
-              if (isLast) {
-                router.push("/");
-              } else {
-                setPage(page + 1);
-              }
-            }}
-          >
-            <Text style={styles.primaryButtonText}>
-              {isLast ? "Start a moment" : "Continue"}
-            </Text>
-          </Pressable>
-
-          {!isLast ? (
-            <Pressable onPress={() => router.push("/")}>
-              <Text style={styles.skipText}>Skip</Text>
-            </Pressable>
-          ) : null}
-        </View>
+        </RippleCard>
       </View>
-    </View>
+
+      <View style={styles.bottom}>
+        <View style={styles.dots}>
+          {pages.map((item, index) => (
+            <View
+              key={item.title}
+              style={[styles.dot, index === page && styles.activeDot]}
+            />
+          ))}
+        </View>
+
+        <RippleButton
+          onPress={() => {
+            if (isLast) {
+              router.push("/create");
+              return;
+            }
+
+            setPage(page + 1);
+          }}
+        >
+          {isLast ? "Start a moment" : "Continue"}
+        </RippleButton>
+
+        {!isLast ? (
+          <Pressable onPress={() => router.push("/")}>
+            <Text style={styles.skipText}>Skip</Text>
+          </Pressable>
+        ) : (
+          <RippleButton tone="ghost" onPress={() => router.push("/")}>
+            Back home
+          </RippleButton>
+        )}
+      </View>
+    </RippleScreen>
   );
 }
 
 const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    minHeight: "100%",
-    backgroundColor: "#FFF8F0",
-    overflow: "hidden",
-  },
-  blob: {
-    position: "absolute",
-    borderRadius: 999,
-    opacity: 0.42,
-  },
-  blobOne: {
-    width: 290,
-    height: 290,
-    backgroundColor: "#F7C7D9",
-    top: -90,
-    right: -90,
-  },
-  blobTwo: {
-    width: 260,
-    height: 260,
-    backgroundColor: "#D8C7F7",
-    top: 260,
-    left: -120,
-    opacity: 0.25,
-  },
-  blobThree: {
-    width: 230,
-    height: 230,
-    backgroundColor: "#F8D8C8",
-    bottom: -70,
-    right: -70,
-    opacity: 0.36,
-  },
   phone: {
-    flex: 1,
-    width: "100%",
-    maxWidth: 430,
-    alignSelf: "center",
-    paddingHorizontal: 26,
-    paddingTop: 60,
-    paddingBottom: 36,
     justifyContent: "space-between",
+    paddingTop: 44,
   },
   top: {
     flexDirection: "row",
@@ -138,50 +106,62 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   brand: {
-    fontSize: 16,
-    fontWeight: "800",
-    color: "#1F1D2B",
+    fontSize: 18,
+    fontWeight: "900",
+    color: rippleColors.ink,
   },
   step: {
     fontSize: 14,
-    fontWeight: "700",
-    color: "#8B7D88",
+    fontWeight: "800",
+    color: rippleColors.soft,
   },
   center: {
-    alignItems: "center",
     justifyContent: "center",
-    paddingBottom: 30,
   },
-  visual: {
-    fontSize: 38,
-    color: "#1F1D2B",
-    marginBottom: 40,
-    letterSpacing: 2,
+  storyCard: {
+    padding: 24,
   },
   title: {
-    fontSize: 46,
-    lineHeight: 52,
+    fontSize: 40,
+    lineHeight: 46,
     fontWeight: "900",
-    color: "#1F1D2B",
-    textAlign: "center",
-    letterSpacing: -1.4,
+    color: rippleColors.ink,
+    marginBottom: 14,
   },
-  subtitle: {
-    marginTop: 22,
-    fontSize: 20,
-    lineHeight: 30,
-    color: "#6F6472",
-    fontWeight: "500",
-    textAlign: "center",
+  body: {
+    fontSize: 17,
+    lineHeight: 25,
+    color: rippleColors.muted,
+    fontWeight: "600",
+    marginBottom: 26,
+  },
+  path: {
+    alignItems: "center",
+    gap: 4,
+    paddingVertical: 8,
+  },
+  pathStep: {
+    alignItems: "center",
+  },
+  pathText: {
+    fontSize: 18,
+    fontWeight: "900",
+    color: rippleColors.ink,
+  },
+  pathArrow: {
+    marginVertical: 3,
+    fontSize: 18,
+    fontWeight: "900",
+    color: rippleColors.soft,
   },
   bottom: {
-    gap: 18,
+    gap: 14,
   },
   dots: {
     flexDirection: "row",
     justifyContent: "center",
     gap: 8,
-    marginBottom: 2,
+    marginBottom: 4,
   },
   dot: {
     width: 7,
@@ -191,24 +171,12 @@ const styles = StyleSheet.create({
   },
   activeDot: {
     width: 24,
-    backgroundColor: "#1F1D2B",
-  },
-  primaryButton: {
-    height: 58,
-    borderRadius: 20,
-    backgroundColor: "#1F1D2B",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  primaryButtonText: {
-    color: "#FFFFFF",
-    fontSize: 17,
-    fontWeight: "900",
+    backgroundColor: rippleColors.ink,
   },
   skipText: {
     textAlign: "center",
-    color: "#8B7D88",
+    color: rippleColors.soft,
     fontSize: 15,
-    fontWeight: "700",
+    fontWeight: "800",
   },
 });
