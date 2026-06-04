@@ -1,16 +1,16 @@
 import { useRouter } from "expo-router";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 import {
   RippleButton,
   RippleCard,
-  RippleHeader,
   RippleLabel,
   RipplePill,
   RippleScreen,
   rippleColors,
   rippleCopy,
 } from "@/components/ripple-ui";
+import { OlmangLogo } from "@/components/olmang-logo";
 
 const stats = [
   ["3", "내 리플"],
@@ -19,9 +19,9 @@ const stats = [
 ];
 
 const globalPreview = [
-  ["Paris", "Shared an umbrella"],
-  ["Mexico City", "Helped carry groceries"],
-  ["Seoul", "Checked in on a friend"],
+  ["Seoul", "친구에게 안부를 물었어요"],
+  ["Tokyo", "Listened to someone"],
+  ["Paris", "Shared a small coffee"],
 ];
 
 export default function HomeScreen() {
@@ -29,23 +29,23 @@ export default function HomeScreen() {
 
   return (
     <RippleScreen>
-      <View style={styles.topRow}>
+      <View style={styles.hero}>
+        <OlmangLogo size={70} />
         <Text style={styles.brand}>{rippleCopy.name}</Text>
-        <Pressable
-          style={styles.profilePill}
-          onPress={() => router.push("/profile")}
-        >
-          <Text style={styles.profilePillText}>My Ripples</Text>
-        </Pressable>
+        <Text style={styles.tagline}>{rippleCopy.tagline}</Text>
       </View>
 
-      <RippleHeader
-        title={rippleCopy.tagline}
-        subtitle="작은 순간을 기록하고, 어디까지 이어지는지 확인해보세요."
-      />
+      <View style={styles.heroAction}>
+        <RippleButton onPress={() => router.push("/create")}>
+          Start a Ripple
+        </RippleButton>
+        <Text style={styles.helperText}>사진 1장 · 문장 1줄 · 장소 1곳</Text>
+      </View>
+
+      <Text style={styles.sectionTitle}>최근 이어진 순간들</Text>
 
       <RippleCard onPress={() => router.push("/profile")}>
-        <RippleLabel>My Journey · 내 리플 요약</RippleLabel>
+        <RippleLabel>My Ripples</RippleLabel>
         <View style={styles.summaryGrid}>
           {stats.map(([value, label]) => (
             <View key={label} style={styles.summaryItem}>
@@ -65,7 +65,7 @@ export default function HomeScreen() {
         }
       >
         <View style={styles.cardTop}>
-          <RippleLabel>Latest Activity · 최근 리플 소식</RippleLabel>
+          <RippleLabel>Latest Ripple</RippleLabel>
           <RipplePill>Growing</RipplePill>
         </View>
         <Text style={styles.cardTitle}>Checked in on a friend</Text>
@@ -74,20 +74,10 @@ export default function HomeScreen() {
         </Text>
       </RippleCard>
 
-      <RippleCard>
-        <RippleLabel>Ripple Reach · 리플이 닿은 곳</RippleLabel>
-        <Text style={styles.reachRoute}>
-          Seoul{"\n"}↓{"\n"}Tokyo{"\n"}↓{"\n"}Mexico City
-        </Text>
-        <Text style={styles.cardText}>
-          작은 순간 하나가 사람과 장소를 지나며 여정이 되고 있어요.
-        </Text>
-      </RippleCard>
-
       <RippleCard onPress={() => router.push("/world")}>
         <View style={styles.cardTop}>
-          <RippleLabel>Global Feed · 전 세계 리플</RippleLabel>
-          <Text style={styles.linkText}>Top Ripples</Text>
+          <RippleLabel>World Ripples</RippleLabel>
+          <Text style={styles.linkText}>Live</Text>
         </View>
         {globalPreview.map(([place, message]) => (
           <View key={place} style={styles.feedRow}>
@@ -98,17 +88,8 @@ export default function HomeScreen() {
       </RippleCard>
 
       <View style={styles.actions}>
-        <RippleButton onPress={() => router.push("/create")}>
-          Start Ripple · 리플 시작하기
-        </RippleButton>
         <RippleButton tone="secondary" onPress={() => router.push("/profile")}>
           My Ripples · 내 리플 보기
-        </RippleButton>
-        <RippleButton tone="secondary" onPress={() => router.push("/world")}>
-          World Ripples · 전 세계 리플 보기
-        </RippleButton>
-        <RippleButton tone="ghost" onPress={() => router.push("/received")}>
-          받은 리플 미리보기
         </RippleButton>
         <RippleButton tone="ghost" onPress={() => router.push("/onboarding")}>
           View onboarding · 온보딩 보기
@@ -119,33 +100,46 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  topRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+  hero: {
     alignItems: "center",
-    marginBottom: 34,
+    paddingTop: 18,
+    paddingBottom: 26,
   },
   brand: {
-    fontSize: 18,
+    marginTop: 18,
+    fontSize: 34,
+    lineHeight: 40,
     fontWeight: "900",
     color: rippleColors.ink,
   },
-  profilePill: {
-    paddingHorizontal: 14,
-    paddingVertical: 9,
-    borderRadius: 999,
-    backgroundColor: "rgba(255,255,255,0.72)",
-    borderWidth: 1,
-    borderColor: rippleColors.whiteLine,
-  },
-  profilePillText: {
-    fontSize: 13,
-    fontWeight: "900",
-    color: rippleColors.ink,
+  tagline: {
+    marginTop: 6,
+    fontSize: 17,
+    lineHeight: 24,
+    fontWeight: "700",
+    color: rippleColors.muted,
   },
   summaryGrid: {
     flexDirection: "row",
     gap: 10,
+  },
+  heroAction: {
+    gap: 10,
+    marginBottom: 30,
+  },
+  helperText: {
+    textAlign: "center",
+    fontSize: 13,
+    lineHeight: 19,
+    fontWeight: "800",
+    color: rippleColors.muted,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    lineHeight: 25,
+    fontWeight: "900",
+    color: rippleColors.ink,
+    marginBottom: 12,
   },
   summaryItem: {
     flex: 1,
@@ -180,14 +174,6 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     color: rippleColors.muted,
     fontWeight: "700",
-  },
-  reachRoute: {
-    fontSize: 22,
-    lineHeight: 34,
-    fontWeight: "900",
-    color: rippleColors.ink,
-    textAlign: "center",
-    marginBottom: 14,
   },
   linkText: {
     fontSize: 13,

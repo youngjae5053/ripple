@@ -46,37 +46,24 @@ export default function ShareScreen() {
       </RippleCard>
 
       <RippleCard>
-        <RippleLabel>Ripple link · 리플 링크</RippleLabel>
+        <RippleLabel>Next · 다음 단계</RippleLabel>
         <Text style={styles.linkText}>ripple.app/r/001</Text>
         <Text style={styles.helperText}>
-          링크를 받은 사람은 사진 1장, 문장 1줄, 장소 1곳으로 리플을 이어갈 수 있어요.
+          작은 순간은 생각보다 멀리 이어질 수 있습니다.
         </Text>
-      </RippleCard>
-
-      <RippleCard>
-        <RippleLabel>Ripple route · 이어지는 길</RippleLabel>
         <View style={styles.pathRow}>
           {["You", "Next person", "?"].map((item, index) => (
             <View key={item} style={styles.pathStep}>
               <Text style={styles.pathText}>{item}</Text>
-              {index < 2 ? <Text style={styles.pathArrow}>↓</Text> : null}
+              {index < 2 ? <Text style={styles.pathArrow}>⌁</Text> : null}
             </View>
           ))}
         </View>
       </RippleCard>
 
-      <RippleCard style={styles.explainCard}>
-        <Text style={styles.explainEnglish}>
-          Your ripple can travel farther than you expect.
-        </Text>
-        <Text style={styles.explainKorean}>
-          이 작은 순간이 생각보다 멀리 이어질 수 있어요.
-        </Text>
-      </RippleCard>
-
       <View style={styles.actions}>
         <RippleButton
-          onPress={() => Alert.alert("Ripple", "Ripple link copied soon.")}
+          onPress={() => Alert.alert("OLMANG", "Ripple link copied soon.")}
         >
           Pass it on · 링크 공유하기
         </RippleButton>
@@ -163,22 +150,6 @@ const styles = StyleSheet.create({
     fontWeight: "900",
     color: rippleColors.blush,
     marginVertical: 1,
-  },
-  explainCard: {
-    backgroundColor: rippleColors.cardSoft,
-  },
-  explainEnglish: {
-    fontSize: 20,
-    lineHeight: 27,
-    fontWeight: "900",
-    color: rippleColors.ink,
-    marginBottom: 8,
-  },
-  explainKorean: {
-    fontSize: 15,
-    lineHeight: 22,
-    fontWeight: "700",
-    color: rippleColors.muted,
   },
   actions: {
     gap: 10,

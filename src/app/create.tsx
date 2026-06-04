@@ -47,21 +47,6 @@ export default function CreateScreen() {
         subtitle="오늘 나눈 작은 호의나 순간을 리플로 시작해보세요."
       />
 
-      <RippleCard>
-        <RippleLabel>One-line moment</RippleLabel>
-        <Text style={styles.inputHelper}>
-          길게 쓰지 않아도 괜찮아요. 한 문장이면 충분해요.
-        </Text>
-        <TextInput
-          value={text}
-          onChangeText={setText}
-          multiline
-          placeholder={"I checked in on a friend...\n친구에게 안부를 물었어요..."}
-          placeholderTextColor={rippleColors.soft}
-          style={styles.input}
-        />
-      </RippleCard>
-
       <RippleCard onPress={pickImage} style={styles.photoCard}>
         {photoUri ? (
           <Image source={{ uri: photoUri }} style={styles.photoPreview} />
@@ -71,7 +56,7 @@ export default function CreateScreen() {
               <RippleLabel>Photo · 사진</RippleLabel>
               <Text style={styles.photoTitle}>Add a photo</Text>
               <Text style={styles.photoText}>
-                행동 장면이 아니어도 괜찮아요. 그 순간이 떠오르는 사진이면 충분해요.
+                그 순간이 떠오르는 사진이면 충분해요.
               </Text>
             </View>
             <View style={styles.photoButton}>
@@ -79,6 +64,19 @@ export default function CreateScreen() {
             </View>
           </View>
         )}
+      </RippleCard>
+
+      <RippleCard>
+        <RippleLabel>One-line moment</RippleLabel>
+        <Text style={styles.inputHelper}>한 문장이면 충분해요.</Text>
+        <TextInput
+          value={text}
+          onChangeText={setText}
+          multiline
+          placeholder={"I checked in on a friend...\n친구에게 안부를 물었어요..."}
+          placeholderTextColor={rippleColors.soft}
+          style={styles.input}
+        />
       </RippleCard>
 
       <View style={styles.examples}>

@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 
 import {
@@ -12,8 +11,6 @@ import {
   RippleScreen,
   rippleColors,
 } from "@/components/ripple-ui";
-
-const filters = ["All", "Recent", "Popular"] as const;
 
 const globalStats = [
   ["🌎", "342", "Total Ripples · 전체 리플"],
@@ -47,7 +44,7 @@ const rippleFeed = [
     moment: "친구에게 안부를 물었어요.",
     status: "Ripple reached 4 places",
     route: "Seoul → Tokyo → ?",
-    photoTone: "#F7C7D9",
+    photoTone: "#F8E7D8",
   },
   {
     city: "Tokyo",
@@ -56,7 +53,7 @@ const rippleFeed = [
     moment: "Listened to someone.",
     status: "Ripple reached 7 places",
     route: "Tokyo → Singapore → Paris",
-    photoTone: "#D8C7F7",
+    photoTone: "#F2EEE8",
   },
   {
     city: "Mexico City",
@@ -65,25 +62,7 @@ const rippleFeed = [
     moment: "길을 헤매는 사람에게 방향을 알려줬어요.",
     status: "Ripple reached 12 places",
     route: "Seoul → Mexico City",
-    photoTone: "#F8D8C8",
-  },
-  {
-    city: "Paris",
-    country: "France",
-    timeAgo: "Yesterday",
-    moment: "Shared a small coffee.",
-    status: "Ripple reached 9 places",
-    route: "Busan → Tokyo → Paris",
-    photoTone: "#F7DCE6",
-  },
-  {
-    city: "Singapore",
-    country: "Singapore",
-    timeAgo: "Yesterday",
-    moment: "무거운 짐을 잠깐 들어줬어요.",
-    status: "Ripple reached 5 places",
-    route: "Singapore → New York",
-    photoTone: "#E6D8F7",
+    photoTone: "#FFE2CC",
   },
   {
     city: "New York",
@@ -92,46 +71,20 @@ const rippleFeed = [
     moment: "고마운 마음을 짧게 전했어요.",
     status: "Ripple reached 15 places",
     route: "Seoul → Paris → New York",
-    photoTone: "#F8E1D4",
+    photoTone: "#F6EBDD",
   },
 ];
 
 export default function WorldScreen() {
   const router = useRouter();
-  const [activeFilter, setActiveFilter] = useState<(typeof filters)[number]>(
-    "All",
-  );
 
   return (
     <RippleScreen>
       <RippleBackButton onPress={() => router.back()} />
       <RippleHeader
-        title="World Ripples"
+        title="OLMANG World"
         subtitle="전 세계에서 이어지는 작은 순간들"
       />
-
-      <View style={styles.filters}>
-        {filters.map((filter) => {
-          const isActive = filter === activeFilter;
-
-          return (
-            <Pressable
-              key={filter}
-              style={[styles.filterChip, isActive && styles.activeFilterChip]}
-              onPress={() => setActiveFilter(filter)}
-            >
-              <Text
-                style={[
-                  styles.filterText,
-                  isActive && styles.activeFilterText,
-                ]}
-              >
-                {filter}
-              </Text>
-            </Pressable>
-          );
-        })}
-      </View>
 
       <RippleCard>
         <RippleLabel>Global Stats · 전 세계 현황</RippleLabel>
@@ -202,17 +155,12 @@ export default function WorldScreen() {
           </View>
 
           <Text style={styles.momentText}>“{item.moment}”</Text>
-
-          <View style={styles.statusRow}>
-            <RipplePill>🌍 {item.status}</RipplePill>
-          </View>
-          <Text style={styles.route}>{item.route}</Text>
         </RippleCard>
       ))}
 
       <View style={styles.actions}>
         <RippleButton onPress={() => router.push("/create")}>
-          Start Ripple · 리플 시작하기
+          Start a Ripple · 리플 시작하기
         </RippleButton>
         <RippleButton tone="secondary" onPress={() => router.push("/profile")}>
           My Ripples · 내 리플 보기
@@ -223,34 +171,6 @@ export default function WorldScreen() {
 }
 
 const styles = StyleSheet.create({
-  filters: {
-    flexDirection: "row",
-    gap: 10,
-    marginBottom: 16,
-  },
-  filterChip: {
-    minWidth: 76,
-    height: 40,
-    borderRadius: 999,
-    backgroundColor: "rgba(255,255,255,0.72)",
-    borderWidth: 1,
-    borderColor: rippleColors.whiteLine,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 14,
-  },
-  activeFilterChip: {
-    backgroundColor: rippleColors.ink,
-    borderColor: rippleColors.ink,
-  },
-  filterText: {
-    fontSize: 13,
-    fontWeight: "900",
-    color: rippleColors.muted,
-  },
-  activeFilterText: {
-    color: "#FFFFFF",
-  },
   globalStats: {
     flexDirection: "row",
     gap: 10,

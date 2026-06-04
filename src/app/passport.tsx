@@ -52,13 +52,6 @@ const baseStops: JourneyStop[] = [
   },
 ];
 
-const rippleProgress = {
-  progress: 50,
-  stops: 4,
-  countries: 3,
-  days: 12,
-};
-
 function splitPlace(place: string) {
   const [city, country] = place.split(",").map((part) => part.trim());
 
@@ -116,8 +109,8 @@ export default function PassportScreen() {
     <RippleScreen>
       <RippleBackButton onPress={() => router.back()} />
       <RippleHeader
-        title="Ripple Passport"
-        subtitle="이 리플이 지나온 여정. 사진 1장, 문장 1줄, 장소 1곳이 함께 남아요."
+        title="OLMANG Passport"
+        subtitle="이 리플이 지나온 여정"
       />
 
       <RippleCard>
@@ -126,57 +119,9 @@ export default function PassportScreen() {
           <RipplePill>{isContinued ? "Ripple" : "Seed"}</RipplePill>
         </View>
         <Text style={styles.momentText}>{text}</Text>
-        <View style={styles.statsGrid}>
-          <View style={styles.statBox}>
-            <Text style={styles.statValue}>0 days</Text>
-            <Text style={styles.statLabel}>Age · 지난 시간</Text>
-          </View>
-          <View style={styles.statBox}>
-            <Text style={styles.statValue}>{activeStops.length}</Text>
-            <Text style={styles.statLabel}>Stops · 이어진 곳</Text>
-          </View>
-          <View style={styles.statBox}>
-            <Text style={styles.statValue}>{isContinued ? "2" : "1"}</Text>
-            <Text style={styles.statLabel}>Countries · 닿은 나라</Text>
-          </View>
-          <View style={styles.statBox}>
-            <Text style={styles.statValue}>{latestStop}</Text>
-            <Text style={styles.statLabel}>Latest · 최근 장소</Text>
-          </View>
-        </View>
-      </RippleCard>
-
-      <RippleCard style={styles.progressCard}>
-        <View style={styles.progressTop}>
-          <View>
-            <RippleLabel>Ripple Reach</RippleLabel>
-            <Text style={styles.progressTitle}>작은 순간이 퍼지는 중</Text>
-          </View>
-          <Text style={styles.progressPercent}>{rippleProgress.progress}%</Text>
-        </View>
-
-        <View style={styles.progressLine} />
-        <Text style={styles.progressDots}>●●●●●○○○○○</Text>
-        <Text style={styles.progressHelper}>
-          작은 순간이 {rippleProgress.countries}개 국가를 지나고 있어요.
+        <Text style={styles.summaryMeta}>
+          {isContinued ? "Ripple" : "Seed"} · Latest stop: {latestStop}
         </Text>
-
-        <View style={styles.progressStats}>
-          <View style={styles.progressStatBox}>
-            <Text style={styles.progressStatValue}>{rippleProgress.stops}</Text>
-            <Text style={styles.progressStatLabel}>Stops</Text>
-          </View>
-          <View style={styles.progressStatBox}>
-            <Text style={styles.progressStatValue}>
-              {rippleProgress.countries}
-            </Text>
-            <Text style={styles.progressStatLabel}>Countries</Text>
-          </View>
-          <View style={styles.progressStatBox}>
-            <Text style={styles.progressStatValue}>{rippleProgress.days}</Text>
-            <Text style={styles.progressStatLabel}>Days</Text>
-          </View>
-        </View>
       </RippleCard>
 
       <RippleCard style={styles.mapCard}>
@@ -202,7 +147,7 @@ export default function PassportScreen() {
                 >
                   {stop.flag} {stop.city}
                 </Text>
-                {!isLast ? <Text style={styles.mapArrow}>↓</Text> : null}
+                {!isLast ? <Text style={styles.mapArrow}>⌁</Text> : null}
               </View>
             );
           })}
@@ -311,93 +256,11 @@ const styles = StyleSheet.create({
     color: rippleColors.ink,
     marginBottom: 22,
   },
-  statsGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 10,
-  },
-  statBox: {
-    width: "48%",
-    backgroundColor: "rgba(255,248,240,0.76)",
-    borderRadius: 18,
-    padding: 14,
-  },
-  statValue: {
-    fontSize: 20,
-    fontWeight: "900",
-    color: rippleColors.ink,
-  },
-  statLabel: {
-    marginTop: 4,
-    fontSize: 12,
-    fontWeight: "800",
-    color: rippleColors.muted,
-  },
-  progressCard: {
-    backgroundColor: "rgba(255,255,255,0.88)",
-    padding: 22,
-  },
-  progressTop: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    gap: 12,
-    marginBottom: 12,
-  },
-  progressTitle: {
-    fontSize: 20,
-    lineHeight: 27,
-    fontWeight: "900",
-    color: rippleColors.ink,
-  },
-  progressPercent: {
-    fontSize: 28,
-    lineHeight: 34,
-    fontWeight: "900",
-    color: rippleColors.blush,
-  },
-  progressLine: {
-    height: 2,
-    borderRadius: 999,
-    backgroundColor: "rgba(31,29,43,0.1)",
-    marginBottom: 12,
-  },
-  progressDots: {
-    fontSize: 24,
-    lineHeight: 30,
-    fontWeight: "900",
-    color: rippleColors.ink,
-    marginBottom: 10,
-  },
-  progressHelper: {
+  summaryMeta: {
     fontSize: 15,
     lineHeight: 22,
-    fontWeight: "700",
+    fontWeight: "800",
     color: rippleColors.muted,
-    marginBottom: 18,
-  },
-  progressStats: {
-    flexDirection: "row",
-    gap: 10,
-  },
-  progressStatBox: {
-    flex: 1,
-    borderRadius: 18,
-    backgroundColor: "rgba(255,248,240,0.76)",
-    padding: 12,
-    alignItems: "center",
-  },
-  progressStatValue: {
-    fontSize: 22,
-    fontWeight: "900",
-    color: rippleColors.ink,
-  },
-  progressStatLabel: {
-    marginTop: 4,
-    fontSize: 11,
-    fontWeight: "900",
-    color: rippleColors.muted,
-    textTransform: "uppercase",
   },
   mapCard: {
     backgroundColor: "rgba(255,255,255,0.9)",

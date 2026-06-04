@@ -9,22 +9,26 @@ import {
   ViewStyle,
 } from "react-native";
 
+import { OlmangLogo } from "@/components/olmang-logo";
+
 export const rippleCopy = {
-  name: "Ripple",
-  tagline: "Start a moment. See how far it goes.",
+  name: "OLMANG",
+  tagline: "작은 순간들이 이어지는 곳",
 };
 
 export const rippleColors = {
-  ink: "#1F1D2B",
-  muted: "#6F6472",
-  soft: "#9A8F9B",
-  blush: "#E98FB0",
-  blushSoft: "rgba(247,199,217,0.45)",
-  paper: "#FFF8F0",
-  card: "rgba(255,255,255,0.84)",
-  cardSoft: "rgba(255,255,255,0.68)",
-  line: "rgba(31,29,43,0.1)",
-  whiteLine: "rgba(255,255,255,0.95)",
+  ink: "#222222",
+  muted: "#6F665D",
+  soft: "#9A8F84",
+  blush: "#FF8A3D",
+  blushSoft: "rgba(255,138,61,0.16)",
+  paper: "#FFF9F4",
+  card: "rgba(255,255,255,0.88)",
+  cardSoft: "rgba(248,231,216,0.58)",
+  line: "rgba(34,34,34,0.08)",
+  whiteLine: "rgba(255,255,255,0)",
+  peach: "#F8E7D8",
+  sand: "#F2EEE8",
 };
 
 type RippleScreenProps = {
@@ -66,7 +70,10 @@ type HeaderProps = {
 export function RippleHeader({ title, subtitle }: HeaderProps) {
   return (
     <View style={styles.header}>
-      <Text style={styles.brand}>{rippleCopy.name}</Text>
+      <View style={styles.brandRow}>
+        <OlmangLogo size={28} />
+        <Text style={styles.brand}>{rippleCopy.name}</Text>
+      </View>
       <Text style={styles.title}>{title}</Text>
       {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
     </View>
@@ -162,26 +169,26 @@ const styles = StyleSheet.create({
   blobOne: {
     width: 310,
     height: 310,
-    backgroundColor: "#F7C7D9",
+    backgroundColor: rippleColors.peach,
     top: -110,
     right: -100,
-    opacity: 0.42,
+    opacity: 0.75,
   },
   blobTwo: {
     width: 260,
     height: 260,
-    backgroundColor: "#D8C7F7",
+    backgroundColor: rippleColors.sand,
     top: 300,
     left: -130,
-    opacity: 0.22,
+    opacity: 0.58,
   },
   blobThree: {
     width: 240,
     height: 240,
-    backgroundColor: "#F8D8C8",
+    backgroundColor: "rgba(255,138,61,0.16)",
     bottom: -80,
     right: -80,
-    opacity: 0.36,
+    opacity: 0.74,
   },
   scrollContent: {
     flexGrow: 1,
@@ -206,17 +213,22 @@ const styles = StyleSheet.create({
     color: rippleColors.ink,
   },
   header: {
-    marginBottom: 20,
+    marginBottom: 28,
+  },
+  brandRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    marginBottom: 18,
   },
   brand: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: "900",
-    color: rippleColors.blush,
-    marginBottom: 10,
+    color: rippleColors.ink,
   },
   title: {
-    fontSize: 42,
-    lineHeight: 48,
+    fontSize: 40,
+    lineHeight: 47,
     fontWeight: "900",
     color: rippleColors.ink,
   },
@@ -229,11 +241,13 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: rippleColors.card,
-    borderRadius: 26,
+    borderRadius: 22,
     padding: 20,
-    borderWidth: 1,
-    borderColor: rippleColors.whiteLine,
-    marginBottom: 14,
+    marginBottom: 16,
+    shadowColor: "#8A4A22",
+    shadowOpacity: 0.08,
+    shadowRadius: 22,
+    shadowOffset: { width: 0, height: 12 },
   },
   label: {
     fontSize: 12,
@@ -247,25 +261,21 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
     borderRadius: 999,
     backgroundColor: rippleColors.blushSoft,
-    borderWidth: 1,
-    borderColor: "rgba(233,143,176,0.3)",
   },
   pillText: {
     fontSize: 12,
     fontWeight: "900",
-    color: "#B75E82",
+    color: rippleColors.blush,
   },
   button: {
     height: 58,
-    borderRadius: 20,
-    backgroundColor: rippleColors.ink,
+    borderRadius: 999,
+    backgroundColor: rippleColors.blush,
     alignItems: "center",
     justifyContent: "center",
   },
   secondaryButton: {
-    backgroundColor: "rgba(255,255,255,0.72)",
-    borderWidth: 1,
-    borderColor: rippleColors.whiteLine,
+    backgroundColor: rippleColors.peach,
   },
   ghostButton: {
     height: 44,

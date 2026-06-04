@@ -84,16 +84,15 @@ export default function ProfileScreen() {
           </View>
           <Text style={styles.rippleTitle}>{ripple.title}</Text>
           <Text style={styles.place}>Latest stop · 최근 장소: {ripple.place}</Text>
-          <View style={styles.statsRow}>
-            <Text style={styles.stat}>{ripple.countries} countries · 나라</Text>
-            <Text style={styles.stat}>{ripple.stops} stops · stop</Text>
-          </View>
+          <Text style={styles.stat}>
+            {ripple.countries} countries · {ripple.stops} stops
+          </Text>
         </RippleCard>
       ))}
 
       <View style={styles.actions}>
         <RippleButton onPress={() => router.push("/create")}>
-          Start Ripple · 새 리플 시작
+          Start a Ripple · 새 리플 시작
         </RippleButton>
         <RippleButton tone="secondary" onPress={() => router.push("/world")}>
           World Ripples · 전 세계 리플
@@ -143,10 +142,6 @@ const styles = StyleSheet.create({
     color: rippleColors.muted,
     fontWeight: "700",
     marginBottom: 12,
-  },
-  statsRow: {
-    flexDirection: "row",
-    gap: 12,
   },
   stat: {
     fontWeight: "800",

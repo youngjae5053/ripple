@@ -50,14 +50,11 @@ export default function ContinueScreen() {
     <RippleScreen>
       <RippleBackButton onPress={() => router.back()} />
       <RippleHeader
-        title="Add your stop."
-        subtitle="내 방식으로 리플을 이어가세요. 사진 1장, 문장 1줄, 장소 1곳이면 충분해요."
+        title="누군가 당신에게 이 순간을 건넸습니다."
+        subtitle="이어갈 준비가 되었나요?"
       />
 
-      <RippleCard>
-        <RippleLabel>Original Ripple · 처음 리플</RippleLabel>
-        <Text style={styles.seedText}>{seedText}</Text>
-      </RippleCard>
+      <Text style={styles.linkMark}>⌁</Text>
 
       <RippleCard onPress={pickImage} style={styles.photoCard}>
         {photoUri ? (
@@ -66,9 +63,9 @@ export default function ContinueScreen() {
           <View style={styles.photoRow}>
             <View style={styles.photoCopy}>
               <RippleLabel>Photo · 사진</RippleLabel>
-              <Text style={styles.photoTitle}>Add a moment photo · 사진 추가</Text>
+              <Text style={styles.photoTitle}>Add a photo</Text>
               <Text style={styles.photoText}>
-                행동 자체가 아니어도 괜찮아요. 이 순간이 떠오르는 사진이면 충분해요.
+                이 순간이 떠오르는 사진이면 충분해요.
               </Text>
             </View>
             <View style={styles.photoButton}>
@@ -80,6 +77,7 @@ export default function ContinueScreen() {
 
       <RippleCard>
         <RippleLabel>One line · 문장 1줄</RippleLabel>
+        <Text style={styles.seedText}>처음 리플: {seedText}</Text>
         <TextInput
           value={message}
           onChangeText={setMessage}
@@ -113,14 +111,6 @@ export default function ContinueScreen() {
         />
       </RippleCard>
 
-      <RippleCard>
-        <RippleLabel>Preview · 미리보기</RippleLabel>
-        <Text style={styles.previewRoute}>Seoul → {place || "?"}</Text>
-        <Text style={styles.previewText}>
-          {message || "내 문장 1줄이 여기에 보여요."}
-        </Text>
-      </RippleCard>
-
       <View style={styles.actions}>
         <RippleButton
           disabled={!canContinue}
@@ -144,11 +134,21 @@ export default function ContinueScreen() {
 }
 
 const styles = StyleSheet.create({
-  seedText: {
-    fontSize: 20,
-    lineHeight: 28,
+  linkMark: {
+    alignSelf: "center",
+    marginTop: -8,
+    marginBottom: 18,
+    fontSize: 28,
+    lineHeight: 32,
     fontWeight: "900",
-    color: rippleColors.ink,
+    color: rippleColors.blush,
+  },
+  seedText: {
+    fontSize: 13,
+    lineHeight: 19,
+    fontWeight: "700",
+    color: rippleColors.muted,
+    marginBottom: 10,
   },
   photoCard: {
     overflow: "hidden",

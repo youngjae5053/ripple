@@ -27,9 +27,10 @@ const pages = [
     path: ["Photo", "Line", "Place"],
   },
   {
-    title: "See how far it goes.",
-    body: "이 리플이 어디까지 닿는지 확인해보세요.",
-    path: ["Seoul", "Tokyo", "Mexico City"],
+    title: "OLMANG",
+    body:
+      "작은 순간들이 이어지는 곳\n\n사진 한 장,\n짧은 한 줄,\n그리고 작은 마음.\n\n그 순간은 생각보다 멀리 이어질 수 있습니다.",
+    path: ["Moment", "Ripple", "Journey"],
   },
 ];
 

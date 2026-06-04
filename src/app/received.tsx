@@ -12,20 +12,6 @@ import {
 } from "@/components/ripple-ui";
 
 const receivedText = "친구에게 안부를 물었어요";
-const explanationRows = [
-  [
-    "This ripple started with one small moment.",
-    "이 리플은 누군가의 작은 순간에서 시작됐어요.",
-  ],
-  [
-    "You can continue it in your own way.",
-    "당신의 방식으로 부담 없이 이어갈 수 있어요.",
-  ],
-  [
-    "Add one photo, one line, one place.",
-    "사진 1장, 문장 1줄, 장소 1곳이면 충분해요.",
-  ],
-];
 
 export default function ReceivedScreen() {
   const router = useRouter();
@@ -53,13 +39,10 @@ export default function ReceivedScreen() {
       </RippleCard>
 
       <RippleCard>
-        <Text style={styles.infoTitle}>What happens next?</Text>
-        {explanationRows.map(([english, korean]) => (
-          <View key={english} style={styles.infoRow}>
-            <Text style={styles.infoEnglish}>{english}</Text>
-            <Text style={styles.infoKorean}>{korean}</Text>
-          </View>
-        ))}
+        <Text style={styles.infoTitle}>Continue in your way.</Text>
+        <Text style={styles.infoKorean}>
+          사진 1장, 문장 1줄, 장소 1곳으로 부담 없이 이어가세요.
+        </Text>
       </RippleCard>
 
       <View style={styles.actions}>
@@ -124,22 +107,9 @@ const styles = StyleSheet.create({
     color: rippleColors.ink,
     marginBottom: 14,
   },
-  infoRow: {
-    paddingTop: 12,
-    borderTopWidth: 1,
-    borderTopColor: rippleColors.line,
-    marginTop: 2,
-  },
-  infoEnglish: {
+  infoKorean: {
     fontSize: 15,
     lineHeight: 22,
-    fontWeight: "900",
-    color: rippleColors.ink,
-  },
-  infoKorean: {
-    marginTop: 3,
-    fontSize: 14,
-    lineHeight: 20,
     fontWeight: "700",
     color: rippleColors.muted,
   },
