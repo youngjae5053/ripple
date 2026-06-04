@@ -30,7 +30,7 @@ export default function CardScreen() {
       <RippleBackButton onPress={() => router.back()} />
       <RippleHeader
         title="Your Ripple is ready."
-        subtitle="Pass it on. See how far it goes."
+        subtitle="리플이 만들어졌어요. 다음 사람에게 이어주고 어디까지 닿는지 확인해보세요."
       />
 
       <RippleCard style={styles.rippleCard}>
@@ -51,12 +51,12 @@ export default function CardScreen() {
 
         <View style={styles.metaGrid}>
           <View style={styles.metaItem}>
-            <RippleLabel>Started in</RippleLabel>
+            <RippleLabel>Started in · 시작된 곳</RippleLabel>
             <Text style={styles.metaValue}>Seoul, South Korea</Text>
           </View>
           <View style={styles.metaItem}>
-            <RippleLabel>Reached</RippleLabel>
-            <Text style={styles.metaValue}>1 person</Text>
+            <RippleLabel>Reached · 닿은 사람</RippleLabel>
+            <Text style={styles.metaValue}>1 person · 1명</Text>
           </View>
         </View>
       </RippleCard>
@@ -70,7 +70,7 @@ export default function CardScreen() {
             })
           }
         >
-          Pass it on
+          Pass it on · 이어주기
         </RippleButton>
         <RippleButton
           tone="secondary"
@@ -81,7 +81,7 @@ export default function CardScreen() {
             })
           }
         >
-          View Journey
+          View Journey · 여정 보기
         </RippleButton>
       </View>
     </RippleScreen>

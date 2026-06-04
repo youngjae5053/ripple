@@ -1,5 +1,6 @@
+import { useState } from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
 
 import {
   RippleBackButton,
@@ -12,127 +13,209 @@ import {
   rippleColors,
 } from "@/components/ripple-ui";
 
-const topRipples = [
+const filters = ["All", "Recent", "Popular"] as const;
+
+const globalStats = [
+  ["🌎", "342", "Total Ripples · 전체 리플"],
+  ["📍", "58", "Cities Reached · 닿은 도시"],
+  ["🤝", "1.2k", "Moments Shared · 나눈 순간"],
+];
+
+const movingRipples = [
   {
-    place: "Paris, France",
-    message: "Shared an umbrella",
-    route: "Seoul → Paris",
-    reach: "8 people",
+    route: "🇰🇷 Seoul → 🇯🇵 Tokyo",
+    moment: "친구에게 안부를 물었어요",
+    timeAgo: "2 hours ago",
   },
   {
-    place: "Mexico City, Mexico",
-    message: "Helped carry groceries",
-    route: "Busan → Tokyo → Mexico City",
-    reach: "12 people",
+    route: "🇫🇷 Paris → 🇲🇽 Mexico City",
+    moment: "작은 커피 한 잔을 건넸어요",
+    timeAgo: "5 hours ago",
   },
   {
-    place: "Cape Town, South Africa",
-    message: "Shared a meal",
-    route: "Seoul → Sydney → Cape Town",
-    reach: "21 people",
-  },
-  {
-    place: "Tokyo, Japan",
-    message: "Listened to someone today",
-    route: "Seoul → Tokyo",
-    reach: "3 people",
+    route: "🇸🇬 Singapore → 🇺🇸 New York",
+    moment: "길을 헤매는 사람에게 방향을 알려줬어요",
+    timeAgo: "1 day ago",
   },
 ];
 
-const globalFeed = [
+const rippleFeed = [
   {
-    place: "Lisbon, Portugal",
-    message: "Left a note for a neighbor",
-    route: "Seoul → Lisbon",
-    reach: "5 stops",
+    city: "Seoul",
+    country: "South Korea",
+    timeAgo: "2 hours ago",
+    moment: "친구에게 안부를 물었어요.",
+    status: "Ripple reached 4 places",
+    route: "Seoul → Tokyo → ?",
+    photoTone: "#F7C7D9",
   },
   {
-    place: "Vancouver, Canada",
-    message: "Made room for a hard conversation",
-    route: "Tokyo → Vancouver",
-    reach: "4 stops",
+    city: "Tokyo",
+    country: "Japan",
+    timeAgo: "4 hours ago",
+    moment: "Listened to someone.",
+    status: "Ripple reached 7 places",
+    route: "Tokyo → Singapore → Paris",
+    photoTone: "#D8C7F7",
+  },
+  {
+    city: "Mexico City",
+    country: "Mexico",
+    timeAgo: "6 hours ago",
+    moment: "길을 헤매는 사람에게 방향을 알려줬어요.",
+    status: "Ripple reached 12 places",
+    route: "Seoul → Mexico City",
+    photoTone: "#F8D8C8",
+  },
+  {
+    city: "Paris",
+    country: "France",
+    timeAgo: "Yesterday",
+    moment: "Shared a small coffee.",
+    status: "Ripple reached 9 places",
+    route: "Busan → Tokyo → Paris",
+    photoTone: "#F7DCE6",
+  },
+  {
+    city: "Singapore",
+    country: "Singapore",
+    timeAgo: "Yesterday",
+    moment: "무거운 짐을 잠깐 들어줬어요.",
+    status: "Ripple reached 5 places",
+    route: "Singapore → New York",
+    photoTone: "#E6D8F7",
+  },
+  {
+    city: "New York",
+    country: "United States",
+    timeAgo: "2 days ago",
+    moment: "고마운 마음을 짧게 전했어요.",
+    status: "Ripple reached 15 places",
+    route: "Seoul → Paris → New York",
+    photoTone: "#F8E1D4",
   },
 ];
 
 export default function WorldScreen() {
   const router = useRouter();
+  const [activeFilter, setActiveFilter] = useState<(typeof filters)[number]>(
+    "All",
+  );
 
   return (
     <RippleScreen>
       <RippleBackButton onPress={() => router.back()} />
       <RippleHeader
-        title="Global Feed"
-        subtitle="Discover moments traveling through people and places around the world."
+        title="World Ripples"
+        subtitle="전 세계에서 이어지는 작은 순간들"
       />
 
+      <View style={styles.filters}>
+        {filters.map((filter) => {
+          const isActive = filter === activeFilter;
+
+          return (
+            <Pressable
+              key={filter}
+              style={[styles.filterChip, isActive && styles.activeFilterChip]}
+              onPress={() => setActiveFilter(filter)}
+            >
+              <Text
+                style={[
+                  styles.filterText,
+                  isActive && styles.activeFilterText,
+                ]}
+              >
+                {filter}
+              </Text>
+            </Pressable>
+          );
+        })}
+      </View>
+
       <RippleCard>
-        <RippleLabel>Top Ripples</RippleLabel>
-        <Text style={styles.worldTitle}>Start a moment. See how far it goes.</Text>
-        <View style={styles.worldStats}>
-          <View style={styles.statBox}>
-            <Text style={styles.statValue}>42</Text>
-            <Text style={styles.statLabel}>Stops</Text>
-          </View>
-          <View style={styles.statBox}>
-            <Text style={styles.statValue}>9</Text>
-            <Text style={styles.statLabel}>Countries</Text>
-          </View>
-          <View style={styles.statBox}>
-            <Text style={styles.statValue}>128</Text>
-            <Text style={styles.statLabel}>People</Text>
-          </View>
+        <RippleLabel>Global Stats · 전 세계 현황</RippleLabel>
+        <View style={styles.globalStats}>
+          {globalStats.map(([icon, value, label]) => (
+            <View key={label} style={styles.globalStatBox}>
+              <Text style={styles.globalStatIcon}>{icon}</Text>
+              <Text style={styles.globalStatValue}>{value}</Text>
+              <Text style={styles.globalStatLabel}>{label}</Text>
+            </View>
+          ))}
         </View>
       </RippleCard>
 
-      <Text style={styles.sectionTitle}>Top Ripples</Text>
-      {topRipples.map((item, index) => (
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>Moving now</Text>
+        <Text style={styles.sectionSubtitle}>지금 이어지고 있는 리플</Text>
+      </View>
+
+      {movingRipples.map((item) => (
         <RippleCard
-          key={item.place}
+          key={item.route}
           onPress={() =>
             router.push({
               pathname: "/passport",
-              params: { text: item.message },
+              params: { text: item.moment },
             })
           }
+          style={styles.movingCard}
         >
-          <View style={styles.cardTop}>
-            <Text style={styles.rank}>#{index + 1}</Text>
-            <RipplePill>{item.reach}</RipplePill>
+          <View style={styles.movingTop}>
+            <Text style={styles.movingRoute}>{item.route}</Text>
+            <RipplePill>Moving</RipplePill>
           </View>
-          <Text style={styles.message}>{item.message}</Text>
-          <Text style={styles.place}>{item.place}</Text>
-          <Text style={styles.route}>{item.route}</Text>
+          <Text style={styles.movingMoment}>“{item.moment}”</Text>
+          <Text style={styles.movingTime}>Moving · {item.timeAgo}</Text>
         </RippleCard>
       ))}
 
-      <Text style={styles.sectionTitle}>Global Feed</Text>
-      {globalFeed.map((item) => (
+      <Text style={styles.sectionTitle}>Live Ripples · 지금 이어지는 리플</Text>
+
+      {rippleFeed.map((item) => (
         <RippleCard
-          key={item.place}
+          key={item.city}
           onPress={() =>
             router.push({
               pathname: "/passport",
-              params: { text: item.message },
+              params: { text: item.moment },
             })
           }
-          style={styles.feedCard}
+          style={styles.rippleCard}
         >
           <View style={styles.cardTop}>
-            <RippleLabel>Live stop</RippleLabel>
-            <RipplePill>{item.reach}</RipplePill>
+            <View>
+              <Text style={styles.place}>📍 {item.city}</Text>
+              <Text style={styles.country}>{item.country}</Text>
+            </View>
+            <Text style={styles.timeAgo}>🕒 {item.timeAgo}</Text>
           </View>
-          <Text style={styles.feedMessage}>{item.message}</Text>
-          <Text style={styles.place}>{item.place}</Text>
+
+          <View
+            style={[
+              styles.photoPlaceholder,
+              { backgroundColor: item.photoTone },
+            ]}
+          >
+            <Text style={styles.photoIcon}>📷</Text>
+          </View>
+
+          <Text style={styles.momentText}>“{item.moment}”</Text>
+
+          <View style={styles.statusRow}>
+            <RipplePill>🌍 {item.status}</RipplePill>
+          </View>
           <Text style={styles.route}>{item.route}</Text>
         </RippleCard>
       ))}
 
       <View style={styles.actions}>
         <RippleButton onPress={() => router.push("/create")}>
-          Start a moment
+          Start Ripple · 리플 시작하기
         </RippleButton>
         <RippleButton tone="secondary" onPress={() => router.push("/profile")}>
-          My Ripples
+          My Ripples · 내 리플 보기
         </RippleButton>
       </View>
     </RippleScreen>
@@ -140,33 +223,63 @@ export default function WorldScreen() {
 }
 
 const styles = StyleSheet.create({
-  worldTitle: {
-    fontSize: 26,
-    lineHeight: 33,
-    fontWeight: "900",
-    color: rippleColors.ink,
-    marginBottom: 18,
+  filters: {
+    flexDirection: "row",
+    gap: 10,
+    marginBottom: 16,
   },
-  worldStats: {
+  filterChip: {
+    minWidth: 76,
+    height: 40,
+    borderRadius: 999,
+    backgroundColor: "rgba(255,255,255,0.72)",
+    borderWidth: 1,
+    borderColor: rippleColors.whiteLine,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 14,
+  },
+  activeFilterChip: {
+    backgroundColor: rippleColors.ink,
+    borderColor: rippleColors.ink,
+  },
+  filterText: {
+    fontSize: 13,
+    fontWeight: "900",
+    color: rippleColors.muted,
+  },
+  activeFilterText: {
+    color: "#FFFFFF",
+  },
+  globalStats: {
     flexDirection: "row",
     gap: 10,
   },
-  statBox: {
+  globalStatBox: {
     flex: 1,
-    backgroundColor: "rgba(255,248,240,0.76)",
+    minHeight: 112,
     borderRadius: 18,
-    padding: 14,
+    backgroundColor: "rgba(255,248,240,0.76)",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 10,
   },
-  statValue: {
+  globalStatIcon: {
+    fontSize: 24,
+    marginBottom: 6,
+  },
+  globalStatValue: {
     fontSize: 24,
     fontWeight: "900",
     color: rippleColors.ink,
   },
-  statLabel: {
-    marginTop: 4,
-    fontSize: 12,
+  globalStatLabel: {
+    marginTop: 5,
+    fontSize: 11,
+    lineHeight: 15,
     fontWeight: "800",
     color: rippleColors.muted,
+    textAlign: "center",
   },
   sectionTitle: {
     fontSize: 18,
@@ -175,40 +288,95 @@ const styles = StyleSheet.create({
     marginTop: 6,
     marginBottom: 10,
   },
-  cardTop: {
+  sectionHeader: {
+    marginTop: 4,
+    marginBottom: 10,
+  },
+  sectionSubtitle: {
+    marginTop: -4,
+    fontSize: 13,
+    lineHeight: 19,
+    fontWeight: "800",
+    color: rippleColors.muted,
+  },
+  movingCard: {
+    backgroundColor: "rgba(255,255,255,0.9)",
+    padding: 18,
+  },
+  movingTop: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
+    alignItems: "flex-start",
     gap: 12,
     marginBottom: 12,
   },
-  rank: {
-    fontSize: 14,
+  movingRoute: {
+    flex: 1,
+    fontSize: 18,
+    lineHeight: 25,
     fontWeight: "900",
+    color: rippleColors.ink,
+  },
+  movingMoment: {
+    fontSize: 20,
+    lineHeight: 28,
+    fontWeight: "900",
+    color: rippleColors.ink,
+    marginBottom: 10,
+  },
+  movingTime: {
+    fontSize: 13,
+    lineHeight: 19,
+    fontWeight: "800",
     color: rippleColors.blush,
   },
-  message: {
-    fontSize: 22,
+  rippleCard: {
+    padding: 18,
+  },
+  cardTop: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap: 12,
+    marginBottom: 14,
+  },
+  place: {
+    fontSize: 18,
+    fontWeight: "900",
+    color: rippleColors.ink,
+  },
+  country: {
+    marginTop: 3,
+    fontSize: 12,
+    fontWeight: "800",
+    color: rippleColors.soft,
+  },
+  timeAgo: {
+    fontSize: 12,
+    lineHeight: 18,
+    fontWeight: "900",
+    color: rippleColors.muted,
+  },
+  photoPlaceholder: {
+    height: 150,
+    borderRadius: 22,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 16,
+    opacity: 0.86,
+  },
+  photoIcon: {
+    fontSize: 38,
+  },
+  momentText: {
+    fontSize: 21,
     lineHeight: 29,
     fontWeight: "900",
     color: rippleColors.ink,
-    marginBottom: 8,
+    marginBottom: 14,
   },
-  feedCard: {
-    backgroundColor: rippleColors.cardSoft,
-  },
-  feedMessage: {
-    fontSize: 20,
-    lineHeight: 27,
-    fontWeight: "900",
-    color: rippleColors.ink,
-    marginBottom: 8,
-  },
-  place: {
-    fontSize: 14,
-    fontWeight: "900",
-    color: rippleColors.ink,
-    marginBottom: 6,
+  statusRow: {
+    alignItems: "flex-start",
+    marginBottom: 10,
   },
   route: {
     fontSize: 13,

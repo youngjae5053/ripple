@@ -14,10 +14,10 @@ import {
 } from "@/components/ripple-ui";
 
 const examples = [
-  "Listened to someone today",
-  "Shared advice",
-  "Helped a stranger",
-  "Checked in on a friend",
+  "힘들어 보이는 사람의 이야기를 들어줬어요",
+  "길을 헤매는 사람에게 방향을 알려줬어요",
+  "작은 커피 한 잔을 건넸어요",
+  "친구에게 안부를 물었어요",
 ];
 
 export default function ContinueScreen() {
@@ -51,11 +51,11 @@ export default function ContinueScreen() {
       <RippleBackButton onPress={() => router.back()} />
       <RippleHeader
         title="Add your stop."
-        subtitle="One photo, one line, one place. Pass it on from here."
+        subtitle="내 방식으로 리플을 이어가세요. 사진 1장, 문장 1줄, 장소 1곳이면 충분해요."
       />
 
       <RippleCard>
-        <RippleLabel>Original Ripple</RippleLabel>
+        <RippleLabel>Original Ripple · 처음 리플</RippleLabel>
         <Text style={styles.seedText}>{seedText}</Text>
       </RippleCard>
 
@@ -65,10 +65,10 @@ export default function ContinueScreen() {
         ) : (
           <View style={styles.photoRow}>
             <View style={styles.photoCopy}>
-              <RippleLabel>Photo</RippleLabel>
-              <Text style={styles.photoTitle}>Add a moment photo</Text>
+              <RippleLabel>Photo · 사진</RippleLabel>
+              <Text style={styles.photoTitle}>Add a moment photo · 사진 추가</Text>
               <Text style={styles.photoText}>
-                A place, object, or scene that remembers this stop.
+                행동 자체가 아니어도 괜찮아요. 이 순간이 떠오르는 사진이면 충분해요.
               </Text>
             </View>
             <View style={styles.photoButton}>
@@ -79,12 +79,12 @@ export default function ContinueScreen() {
       </RippleCard>
 
       <RippleCard>
-        <RippleLabel>One line</RippleLabel>
+        <RippleLabel>One line · 문장 1줄</RippleLabel>
         <TextInput
           value={message}
           onChangeText={setMessage}
           multiline
-          placeholder="I listened to someone today..."
+          placeholder="힘들어 보이는 사람의 이야기를 들어줬어요..."
           placeholderTextColor={rippleColors.soft}
           style={styles.input}
         />
@@ -103,21 +103,21 @@ export default function ContinueScreen() {
       </View>
 
       <RippleCard>
-        <RippleLabel>Place</RippleLabel>
+        <RippleLabel>Place · 장소 1곳</RippleLabel>
         <TextInput
           value={place}
           onChangeText={setPlace}
-          placeholder="City, Country"
+          placeholder="도시, 나라"
           placeholderTextColor={rippleColors.soft}
           style={styles.placeInput}
         />
       </RippleCard>
 
       <RippleCard>
-        <RippleLabel>Preview</RippleLabel>
+        <RippleLabel>Preview · 미리보기</RippleLabel>
         <Text style={styles.previewRoute}>Seoul → {place || "?"}</Text>
         <Text style={styles.previewText}>
-          {message || "Your line will appear here."}
+          {message || "내 문장 1줄이 여기에 보여요."}
         </Text>
       </RippleCard>
 
@@ -136,7 +136,7 @@ export default function ContinueScreen() {
             })
           }
         >
-          Add stop to Journey
+          Add stop · 여정에 추가하기
         </RippleButton>
       </View>
     </RippleScreen>

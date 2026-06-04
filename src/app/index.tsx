@@ -13,9 +13,9 @@ import {
 } from "@/components/ripple-ui";
 
 const stats = [
-  ["3", "My Ripples"],
-  ["6", "Countries"],
-  ["8", "Stops"],
+  ["3", "내 리플"],
+  ["6", "닿은 나라"],
+  ["8", "이어진 곳"],
 ];
 
 const globalPreview = [
@@ -41,11 +41,11 @@ export default function HomeScreen() {
 
       <RippleHeader
         title={rippleCopy.tagline}
-        subtitle="Create one small moment, pass it on, and watch its journey grow through people and places."
+        subtitle="작은 순간을 기록하고, 어디까지 이어지는지 확인해보세요."
       />
 
-      <RippleCard>
-        <RippleLabel>Today</RippleLabel>
+      <RippleCard onPress={() => router.push("/profile")}>
+        <RippleLabel>My Journey · 내 리플 요약</RippleLabel>
         <View style={styles.summaryGrid}>
           {stats.map(([value, label]) => (
             <View key={label} style={styles.summaryItem}>
@@ -65,18 +65,28 @@ export default function HomeScreen() {
         }
       >
         <View style={styles.cardTop}>
-          <RippleLabel>Latest ripple</RippleLabel>
+          <RippleLabel>Latest Activity · 최근 리플 소식</RippleLabel>
           <RipplePill>Growing</RipplePill>
         </View>
         <Text style={styles.cardTitle}>Checked in on a friend</Text>
         <Text style={styles.cardText}>
-          Seoul to Tokyo to Mexico City, waiting for the next stop.
+          서울에서 시작된 작은 순간이 다음 사람에게 이어지고 있어요.
+        </Text>
+      </RippleCard>
+
+      <RippleCard>
+        <RippleLabel>Ripple Reach · 리플이 닿은 곳</RippleLabel>
+        <Text style={styles.reachRoute}>
+          Seoul{"\n"}↓{"\n"}Tokyo{"\n"}↓{"\n"}Mexico City
+        </Text>
+        <Text style={styles.cardText}>
+          작은 순간 하나가 사람과 장소를 지나며 여정이 되고 있어요.
         </Text>
       </RippleCard>
 
       <RippleCard onPress={() => router.push("/world")}>
         <View style={styles.cardTop}>
-          <RippleLabel>Global Feed</RippleLabel>
+          <RippleLabel>Global Feed · 전 세계 리플</RippleLabel>
           <Text style={styles.linkText}>Top Ripples</Text>
         </View>
         {globalPreview.map(([place, message]) => (
@@ -89,19 +99,19 @@ export default function HomeScreen() {
 
       <View style={styles.actions}>
         <RippleButton onPress={() => router.push("/create")}>
-          Start a moment
+          Start Ripple · 리플 시작하기
         </RippleButton>
         <RippleButton tone="secondary" onPress={() => router.push("/profile")}>
-          View My Ripples
+          My Ripples · 내 리플 보기
         </RippleButton>
         <RippleButton tone="secondary" onPress={() => router.push("/world")}>
-          Explore World
+          World Ripples · 전 세계 리플 보기
         </RippleButton>
         <RippleButton tone="ghost" onPress={() => router.push("/received")}>
-          Preview received ripple
+          받은 리플 미리보기
         </RippleButton>
         <RippleButton tone="ghost" onPress={() => router.push("/onboarding")}>
-          View onboarding
+          View onboarding · 온보딩 보기
         </RippleButton>
       </View>
     </RippleScreen>
@@ -170,6 +180,14 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     color: rippleColors.muted,
     fontWeight: "700",
+  },
+  reachRoute: {
+    fontSize: 22,
+    lineHeight: 34,
+    fontWeight: "900",
+    color: rippleColors.ink,
+    textAlign: "center",
+    marginBottom: 14,
   },
   linkText: {
     fontSize: 13,

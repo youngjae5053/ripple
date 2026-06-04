@@ -11,7 +11,21 @@ import {
   rippleColors,
 } from "@/components/ripple-ui";
 
-const receivedText = "Checked in on a friend";
+const receivedText = "친구에게 안부를 물었어요";
+const explanationRows = [
+  [
+    "This ripple started with one small moment.",
+    "이 리플은 누군가의 작은 순간에서 시작됐어요.",
+  ],
+  [
+    "You can continue it in your own way.",
+    "당신의 방식으로 부담 없이 이어갈 수 있어요.",
+  ],
+  [
+    "Add one photo, one line, one place.",
+    "사진 1장, 문장 1줄, 장소 1곳이면 충분해요.",
+  ],
+];
 
 export default function ReceivedScreen() {
   const router = useRouter();
@@ -19,18 +33,18 @@ export default function ReceivedScreen() {
   return (
     <RippleScreen>
       <RippleHeader
-        title="A Ripple found you."
-        subtitle="Someone started a moment. You can pass it on in your own way."
+        title="A ripple found you."
+        subtitle="누군가의 작은 순간이 당신에게 도착했어요."
       />
 
       <RippleCard>
         <View style={styles.cardTop}>
-          <RippleLabel>Ripple #001</RippleLabel>
+          <RippleLabel>Ripple #001 · 도착한 리플</RippleLabel>
           <RipplePill>From Seoul</RipplePill>
         </View>
         <Text style={styles.momentText}>{receivedText}</Text>
         <View style={styles.routeBox}>
-          <Text style={styles.routeText}>Seoul</Text>
+          <Text style={styles.routeText}>Seoul 🇰🇷</Text>
           <Text style={styles.routeArrow}>↓</Text>
           <Text style={styles.routeText}>You</Text>
           <Text style={styles.routeArrow}>↓</Text>
@@ -39,11 +53,13 @@ export default function ReceivedScreen() {
       </RippleCard>
 
       <RippleCard>
-        <Text style={styles.infoTitle}>Continue with one stop.</Text>
-        <Text style={styles.infoText}>
-          Add one photo, one line, and one place. Your stop becomes part of
-          the Journey.
-        </Text>
+        <Text style={styles.infoTitle}>What happens next?</Text>
+        {explanationRows.map(([english, korean]) => (
+          <View key={english} style={styles.infoRow}>
+            <Text style={styles.infoEnglish}>{english}</Text>
+            <Text style={styles.infoKorean}>{korean}</Text>
+          </View>
+        ))}
       </RippleCard>
 
       <View style={styles.actions}>
@@ -55,7 +71,7 @@ export default function ReceivedScreen() {
             })
           }
         >
-          Add your stop
+          Continue this ripple · 리플 이어가기
         </RippleButton>
         <RippleButton
           tone="secondary"
@@ -66,7 +82,7 @@ export default function ReceivedScreen() {
             })
           }
         >
-          View Journey
+          View passport · 여정 보기
         </RippleButton>
       </View>
     </RippleScreen>
@@ -106,11 +122,24 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "900",
     color: rippleColors.ink,
-    marginBottom: 8,
+    marginBottom: 14,
   },
-  infoText: {
+  infoRow: {
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: rippleColors.line,
+    marginTop: 2,
+  },
+  infoEnglish: {
     fontSize: 15,
     lineHeight: 22,
+    fontWeight: "900",
+    color: rippleColors.ink,
+  },
+  infoKorean: {
+    marginTop: 3,
+    fontSize: 14,
+    lineHeight: 20,
     fontWeight: "700",
     color: rippleColors.muted,
   },

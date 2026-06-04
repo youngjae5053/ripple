@@ -15,9 +15,9 @@ import {
 
 const examples = [
   "Checked in on a friend",
+  "친구에게 안부를 물었어요",
   "Listened to someone",
-  "Picked up trash",
-  "Shared advice",
+  "힘들어 보이는 사람의 이야기를 들어줬어요",
 ];
 
 export default function CreateScreen() {
@@ -44,16 +44,19 @@ export default function CreateScreen() {
       <RippleBackButton onPress={() => router.back()} />
       <RippleHeader
         title="Start a moment."
-        subtitle="One photo, one line, one place. See how far it goes."
+        subtitle="오늘 나눈 작은 호의나 순간을 리플로 시작해보세요."
       />
 
       <RippleCard>
-        <RippleLabel>Your moment</RippleLabel>
+        <RippleLabel>One-line moment</RippleLabel>
+        <Text style={styles.inputHelper}>
+          길게 쓰지 않아도 괜찮아요. 한 문장이면 충분해요.
+        </Text>
         <TextInput
           value={text}
           onChangeText={setText}
           multiline
-          placeholder="I checked in on a friend..."
+          placeholder={"I checked in on a friend...\n친구에게 안부를 물었어요..."}
           placeholderTextColor={rippleColors.soft}
           style={styles.input}
         />
@@ -65,10 +68,10 @@ export default function CreateScreen() {
         ) : (
           <View style={styles.photoRow}>
             <View style={styles.photoCopy}>
-              <RippleLabel>Photo</RippleLabel>
+              <RippleLabel>Photo · 사진</RippleLabel>
               <Text style={styles.photoTitle}>Add a photo</Text>
               <Text style={styles.photoText}>
-                A place, object, or scene that remembers the moment.
+                행동 장면이 아니어도 괜찮아요. 그 순간이 떠오르는 사진이면 충분해요.
               </Text>
             </View>
             <View style={styles.photoButton}>
@@ -99,7 +102,7 @@ export default function CreateScreen() {
             })
           }
         >
-          Create Ripple
+          Create Ripple · 리플 만들기
         </RippleButton>
       </View>
     </RippleScreen>
@@ -107,6 +110,14 @@ export default function CreateScreen() {
 }
 
 const styles = StyleSheet.create({
+  inputHelper: {
+    marginTop: -4,
+    marginBottom: 12,
+    fontSize: 14,
+    lineHeight: 20,
+    fontWeight: "700",
+    color: rippleColors.muted,
+  },
   input: {
     minHeight: 112,
     fontSize: 20,

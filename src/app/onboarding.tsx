@@ -13,17 +13,22 @@ import {
 const pages = [
   {
     title: "Start a moment.",
-    body: "One photo, one line, one place. That is enough to begin.",
+    body: "오늘의 작은 호의나 순간을 리플로 시작해보세요.",
     path: ["You", "Friend", "?"],
   },
   {
     title: "Pass it on.",
-    body: "A Ripple only moves when someone chooses to carry it forward.",
+    body: "리플을 다음 사람에게 부담 없이 이어주세요.",
     path: ["Seoul", "Tokyo", "?"],
   },
   {
+    title: "One photo. One line. One place.",
+    body: "사진 1장, 문장 1줄, 장소 1곳이면 충분해요.",
+    path: ["Photo", "Line", "Place"],
+  },
+  {
     title: "See how far it goes.",
-    body: "Every stop adds a new place to the Journey.",
+    body: "이 리플이 어디까지 닿는지 확인해보세요.",
     path: ["Seoul", "Tokyo", "Mexico City"],
   },
 ];
@@ -71,23 +76,23 @@ export default function OnboardingScreen() {
         <RippleButton
           onPress={() => {
             if (isLast) {
-              router.push("/create");
+              router.push("/");
               return;
             }
 
             setPage(page + 1);
           }}
         >
-          {isLast ? "Start a moment" : "Continue"}
+          {isLast ? "Start Ripple · 시작하기" : "Continue · 계속 보기"}
         </RippleButton>
 
         {!isLast ? (
           <Pressable onPress={() => router.push("/")}>
-            <Text style={styles.skipText}>Skip</Text>
+            <Text style={styles.skipText}>Skip · 건너뛰기</Text>
           </Pressable>
         ) : (
           <RippleButton tone="ghost" onPress={() => router.push("/")}>
-            Back home
+            Back home · 홈으로
           </RippleButton>
         )}
       </View>
