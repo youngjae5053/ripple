@@ -167,6 +167,22 @@ export default function PassportScreen() {
             <Text style={styles.mapStatLabel}>Latest · 최근 장소</Text>
           </View>
         </View>
+        <RippleButton
+          tone="secondary"
+          onPress={() =>
+            router.push({
+              pathname: "/journey-map",
+              params: {
+                text,
+                place,
+                photo,
+                continued: isContinued ? "true" : "false",
+              },
+            })
+          }
+        >
+          Open map · 지도 보기
+        </RippleButton>
       </RippleCard>
 
       <View style={styles.sectionHeader}>

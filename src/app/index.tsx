@@ -12,16 +12,27 @@ import {
 } from "@/components/ripple-ui";
 import { OlmangLogo } from "@/components/olmang-logo";
 
-const stats = [
-  ["3", "내 리플"],
-  ["6", "닿은 나라"],
-  ["8", "이어진 곳"],
-];
+const flowSteps = ["Photo", "One line", "Pass it on", "Keep moving"];
 
-const globalPreview = [
-  ["Seoul", "친구에게 안부를 물었어요"],
-  ["Tokyo", "Listened to someone"],
-  ["Paris", "Shared a small coffee"],
+const homeCards = [
+  {
+    label: "My Journey",
+    title: "내가 시작한 순간들",
+    text: "이어지고 있는 리플을 조용히 모아볼 수 있어요.",
+    route: "/profile" as const,
+  },
+  {
+    label: "Journey",
+    title: "최근 리플의 여정",
+    text: "서울에서 시작된 작은 순간이 다음 사람에게 닿고 있어요.",
+    route: "/passport" as const,
+  },
+  {
+    label: "Discover",
+    title: "전 세계의 흐름",
+    text: "지금 이어지고 있는 작은 순간들을 둘러보세요.",
+    route: "/world" as const,
+  },
 ];
 
 export default function HomeScreen() {
@@ -30,67 +41,58 @@ export default function HomeScreen() {
   return (
     <RippleScreen>
       <View style={styles.hero}>
-        <OlmangLogo size={70} />
+        <OlmangLogo size={74} />
         <Text style={styles.brand}>{rippleCopy.name}</Text>
         <Text style={styles.tagline}>{rippleCopy.tagline}</Text>
+        <Text style={styles.question}>Where will it go?</Text>
+        <Text style={styles.questionKo}>어디까지 닿을까요?</Text>
       </View>
 
       <View style={styles.heroAction}>
-        <RippleButton onPress={() => router.push("/create")}>
-          Start a Ripple
-        </RippleButton>
-        <Text style={styles.helperText}>사진 1장 · 문장 1줄 · 장소 1곳</Text>
+        <RippleButton onPress={() => router.push("/create")}>Start</RippleButton>
       </View>
 
-      <Text style={styles.sectionTitle}>최근 이어진 순간들</Text>
-
-      <RippleCard onPress={() => router.push("/profile")}>
-        <RippleLabel>My Ripples</RippleLabel>
-        <View style={styles.summaryGrid}>
-          {stats.map(([value, label]) => (
-            <View key={label} style={styles.summaryItem}>
-              <Text style={styles.summaryValue}>{value}</Text>
-              <Text style={styles.summaryLabel}>{label}</Text>
+      <RippleCard style={styles.flowCard}>
+        <View style={styles.flow}>
+          {flowSteps.map((step, index) => (
+            <View key={step} style={styles.flowStep}>
+              <Text style={styles.flowText}>{step}</Text>
+              {index < flowSteps.length - 1 ? (
+                <Text style={styles.flowArrow}>↓</Text>
+              ) : null}
             </View>
           ))}
         </View>
       </RippleCard>
 
-      <RippleCard
-        onPress={() =>
-          router.push({
-            pathname: "/passport",
-            params: { text: "Checked in on a friend" },
-          })
-        }
-      >
-        <View style={styles.cardTop}>
-          <RippleLabel>Latest Ripple</RippleLabel>
-          <RipplePill>Growing</RipplePill>
-        </View>
-        <Text style={styles.cardTitle}>Checked in on a friend</Text>
-        <Text style={styles.cardText}>
-          서울에서 시작된 작은 순간이 다음 사람에게 이어지고 있어요.
-        </Text>
-      </RippleCard>
+      <View style={styles.cardList}>
+        {homeCards.map((card) => (
+          <RippleCard
+            key={card.label}
+            onPress={() => {
+              if (card.route === "/passport") {
+                router.push({
+                  pathname: "/passport",
+                  params: { text: "친구에게 안부를 물었어요" },
+                });
+                return;
+              }
 
-      <RippleCard onPress={() => router.push("/world")}>
-        <View style={styles.cardTop}>
-          <RippleLabel>World Ripples</RippleLabel>
-          <Text style={styles.linkText}>Live</Text>
-        </View>
-        {globalPreview.map(([place, message]) => (
-          <View key={place} style={styles.feedRow}>
-            <Text style={styles.feedPlace}>{place}</Text>
-            <Text style={styles.feedMessage}>{message}</Text>
-          </View>
+              router.push(card.route);
+            }}
+            style={styles.cleanCard}
+          >
+            <View style={styles.cardTop}>
+              <RippleLabel>{card.label}</RippleLabel>
+              {card.label === "Journey" ? <RipplePill>Moving</RipplePill> : null}
+            </View>
+            <Text style={styles.cardTitle}>{card.title}</Text>
+            <Text style={styles.cardText}>{card.text}</Text>
+          </RippleCard>
         ))}
-      </RippleCard>
+      </View>
 
       <View style={styles.actions}>
-        <RippleButton tone="secondary" onPress={() => router.push("/profile")}>
-          My Ripples · 내 리플 보기
-        </RippleButton>
         <RippleButton tone="ghost" onPress={() => router.push("/onboarding")}>
           View onboarding · 온보딩 보기
         </RippleButton>
@@ -102,58 +104,70 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   hero: {
     alignItems: "center",
-    paddingTop: 18,
-    paddingBottom: 26,
+    paddingTop: 28,
+    paddingBottom: 28,
   },
   brand: {
     marginTop: 18,
-    fontSize: 34,
-    lineHeight: 40,
+    fontSize: 36,
+    lineHeight: 42,
     fontWeight: "900",
     color: rippleColors.ink,
   },
   tagline: {
     marginTop: 6,
-    fontSize: 17,
-    lineHeight: 24,
+    fontSize: 16,
+    lineHeight: 23,
     fontWeight: "700",
     color: rippleColors.muted,
   },
-  summaryGrid: {
-    flexDirection: "row",
-    gap: 10,
+  question: {
+    marginTop: 34,
+    fontSize: 34,
+    lineHeight: 40,
+    fontWeight: "900",
+    color: rippleColors.ink,
+    textAlign: "center",
+  },
+  questionKo: {
+    marginTop: 8,
+    fontSize: 20,
+    lineHeight: 28,
+    fontWeight: "800",
+    color: rippleColors.blush,
+    textAlign: "center",
   },
   heroAction: {
-    gap: 10,
-    marginBottom: 30,
+    marginBottom: 22,
   },
-  helperText: {
-    textAlign: "center",
-    fontSize: 13,
-    lineHeight: 19,
-    fontWeight: "800",
-    color: rippleColors.muted,
+  flowCard: {
+    backgroundColor: rippleColors.cardSoft,
+    paddingVertical: 24,
   },
-  sectionTitle: {
+  flow: {
+    alignItems: "center",
+  },
+  flowStep: {
+    alignItems: "center",
+  },
+  flowText: {
+    fontSize: 20,
+    lineHeight: 27,
+    fontWeight: "900",
+    color: rippleColors.ink,
+  },
+  flowArrow: {
+    marginVertical: 5,
     fontSize: 18,
-    lineHeight: 25,
+    lineHeight: 24,
     fontWeight: "900",
-    color: rippleColors.ink,
-    marginBottom: 12,
+    color: rippleColors.blush,
   },
-  summaryItem: {
-    flex: 1,
+  cardList: {
+    paddingTop: 10,
   },
-  summaryValue: {
-    fontSize: 32,
-    fontWeight: "900",
-    color: rippleColors.ink,
-  },
-  summaryLabel: {
-    marginTop: 4,
-    fontSize: 13,
-    fontWeight: "800",
-    color: rippleColors.muted,
+  cleanCard: {
+    padding: 22,
   },
   cardTop: {
     flexDirection: "row",
@@ -162,11 +176,10 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   cardTitle: {
-    fontSize: 24,
-    lineHeight: 31,
+    fontSize: 22,
+    lineHeight: 29,
     fontWeight: "900",
     color: rippleColors.ink,
-    marginTop: 2,
     marginBottom: 8,
   },
   cardText: {
@@ -175,30 +188,8 @@ const styles = StyleSheet.create({
     color: rippleColors.muted,
     fontWeight: "700",
   },
-  linkText: {
-    fontSize: 13,
-    fontWeight: "900",
-    color: rippleColors.blush,
-  },
-  feedRow: {
-    paddingVertical: 10,
-    borderTopWidth: 1,
-    borderTopColor: rippleColors.line,
-  },
-  feedPlace: {
-    fontSize: 15,
-    fontWeight: "900",
-    color: rippleColors.ink,
-  },
-  feedMessage: {
-    marginTop: 3,
-    fontSize: 14,
-    color: rippleColors.muted,
-    fontWeight: "700",
-  },
   actions: {
-    gap: 12,
     marginTop: "auto",
-    paddingTop: 10,
+    paddingTop: 6,
   },
 });
