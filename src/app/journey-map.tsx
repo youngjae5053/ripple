@@ -1,8 +1,11 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { DimensionValue, StyleSheet, Text, View, ViewStyle } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
+import { BottomNavigation } from "@/components/bottom-navigation";
+import { OlmangLogo } from "@/components/olmang-logo";
 import {
   RippleBackButton,
+  RippleButton,
   RippleCard,
   RippleHeader,
   RippleLabel,
@@ -11,267 +14,163 @@ import {
   rippleColors,
 } from "@/components/ripple-ui";
 
-type MapStop = {
-  city: string;
-  country: string;
-  flag: string;
-  message: string;
-  time: string;
-  x: number;
-  y: number;
-  preview?: boolean;
-};
-
-const coordinateLookup: Record<string, { x: number; y: number }> = {
-  seoul: { x: 77, y: 39 },
-  tokyo: { x: 84, y: 41 },
-  "mexico city": { x: 22, y: 55 },
-  paris: { x: 48, y: 34 },
-  singapore: { x: 72, y: 65 },
-  "new york": { x: 28, y: 38 },
-};
-
-const previewStops: MapStop[] = [
-  {
-    city: "Tokyo",
-    country: "Japan",
-    flag: "🇯🇵",
-    message: "Listened to someone.",
-    time: "Future stop",
-    x: coordinateLookup.tokyo.x,
-    y: coordinateLookup.tokyo.y,
-    preview: true,
-  },
-  {
-    city: "Mexico City",
-    country: "Mexico",
-    flag: "🇲🇽",
-    message: "Helped someone find their way.",
-    time: "Future stop",
-    x: coordinateLookup["mexico city"].x,
-    y: coordinateLookup["mexico city"].y,
-    preview: true,
-  },
+const journeyStops = [
+  { city: "Seoul", country: "Korea", x: 16, y: 26 },
+  { city: "Suwon", country: "Korea", x: 46, y: 36 },
+  { city: "Busan", country: "Korea", x: 27, y: 66 },
+  { city: "Fukuoka", country: "Japan", x: 62, y: 69 },
+  { city: "Tokyo", country: "Japan", x: 78, y: 34 },
 ];
 
-function splitPlace(place: string) {
-  const [city, country] = place.split(",").map((part) => part.trim());
-
-  return {
-    city: city || "New stop",
-    country: country || "Somewhere",
-  };
-}
-
-function coordinatesFor(city: string, fallbackIndex: number) {
-  const saved = coordinateLookup[city.toLowerCase()];
-
-  if (saved) {
-    return saved;
-  }
-
-  return {
-    x: Math.min(82, 34 + fallbackIndex * 13),
-    y: Math.min(68, 38 + fallbackIndex * 7),
-  };
-}
-
-function buildStops({
-  text,
-  place,
-  isContinued,
-}: {
-  text: string;
-  place: string;
-  isContinued: boolean;
-}) {
-  const seoul = coordinateLookup.seoul;
-  const firstStop: MapStop = {
-    city: "Seoul",
-    country: "South Korea",
-    flag: "🇰🇷",
-    message: isContinued ? "친구에게 안부를 물었어요." : text,
-    time: "Step 1",
-    x: seoul.x,
-    y: seoul.y,
-  };
-
-  if (!isContinued) {
-    return [firstStop, ...previewStops];
-  }
-
-  const continuedPlace = splitPlace(place);
-  const continuedCoordinates = coordinatesFor(continuedPlace.city, 1);
-
-  return [
-    firstStop,
-    {
-      city: continuedPlace.city,
-      country: continuedPlace.country,
-      flag: "🌍",
-      message: text,
-      time: "Step 2 · Latest",
-      x: continuedCoordinates.x,
-      y: continuedCoordinates.y,
-    },
-    ...previewStops,
-  ];
-}
-
-function lineStyle(from: MapStop, to: MapStop): ViewStyle {
-  const width = 340;
-  const height = 210;
-  const dx = ((to.x - from.x) / 100) * width;
-  const dy = ((to.y - from.y) / 100) * height;
-  const length = Math.sqrt(dx * dx + dy * dy);
-  const angle = `${Math.atan2(dy, dx)}rad`;
-
-  return {
-    left: `${from.x}%` as DimensionValue,
-    top: `${from.y}%` as DimensionValue,
-    width: length,
-    transform: [{ rotate: angle }],
-  };
-}
+const mapStats = [
+  ["Moments", "1248"],
+  ["Cities", "43"],
+  ["Countries", "12"],
+  ["Distance", "4281 km"],
+];
 
 export default function JourneyMapScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
-
-  const text =
+  const moment =
     typeof params.text === "string" && params.text.trim().length > 0
       ? params.text
       : "친구에게 안부를 물었어요";
-  const place =
-    typeof params.place === "string" && params.place.trim().length > 0
-      ? params.place
-      : "Seoul, South Korea";
-  const isContinued = params.continued === "true";
-  const stops = buildStops({ text, place, isContinued });
-  const activeStops = stops.filter((stop) => !stop.preview);
-  const latestStop = activeStops[activeStops.length - 1] ?? stops[0];
+  const currentStop = journeyStops[journeyStops.length - 1];
 
   return (
     <RippleScreen>
       <RippleBackButton onPress={() => router.back()} />
       <RippleHeader
         title="Journey Map"
-        subtitle="장소를 따라 이어지는 리플의 이동 경로"
+        subtitle="순간은 생각보다 멀리 이어집니다."
       />
 
       <RippleCard style={styles.mapCard}>
-        <View style={styles.mapTop}>
+        <View style={styles.mapIntro}>
           <View>
-            <RippleLabel>OLMANG Journey</RippleLabel>
-            <Text style={styles.mapTitle}>Where it has traveled</Text>
-            <Text style={styles.mapSubtitle}>
-              작은 순간이 사람과 장소를 지나가고 있어요.
-            </Text>
+            <RippleLabel>Living Universe</RippleLabel>
+            <Text style={styles.mapTitle}>Connected moments</Text>
           </View>
-          <RipplePill>{isContinued ? "Ripple" : "Seed"}</RipplePill>
+          <OlmangLogo size={46} />
         </View>
 
-        <View style={styles.worldMap}>
-          <View style={[styles.land, styles.landAmerica]} />
-          <View style={[styles.land, styles.landEurope]} />
-          <View style={[styles.land, styles.landAsia]} />
-          <View style={[styles.land, styles.landAustralia]} />
+        <View style={styles.cosmicMap}>
+          <View style={[styles.orbitRing, styles.orbitOuter]} />
+          <View style={[styles.orbitRing, styles.orbitMiddle]} />
+          <View style={[styles.orbitRing, styles.orbitInner]} />
 
-          {stops.slice(0, -1).map((stop, index) => {
-            const nextStop = stops[index + 1];
+          <View style={styles.starOne} />
+          <View style={styles.starTwo} />
+          <View style={styles.starThree} />
+          <View style={styles.starFour} />
 
-            return (
-              <View
-                key={`${stop.city}-${nextStop.city}`}
-                pointerEvents="none"
-                style={[
-                  styles.routeLine,
-                  stop.preview && styles.previewLine,
-                  lineStyle(stop, nextStop),
-                ]}
-              />
-            );
-          })}
+          <View style={[styles.path, styles.pathOne]} />
+          <View style={[styles.path, styles.pathTwo]} />
+          <View style={[styles.path, styles.pathThree]} />
+          <View style={[styles.path, styles.pathFour]} />
 
-          {stops.map((stop, index) => {
-            const isLatest = stop.city === latestStop.city && !stop.preview;
+          <View style={[styles.travelGlow, styles.travelGlowOne]} />
+          <View style={[styles.travelGlow, styles.travelGlowTwo]} />
+          <View style={[styles.travelGlow, styles.travelGlowThree]} />
+
+          {journeyStops.map((stop, index) => {
+            const isCurrent = stop.city === currentStop.city;
 
             return (
               <View
-                key={`${stop.city}-${index}`}
+                key={stop.city}
                 style={[
-                  styles.pinWrap,
+                  styles.planetWrap,
                   { left: `${stop.x}%`, top: `${stop.y}%` },
                 ]}
               >
+                {isCurrent ? <View style={styles.currentHalo} /> : null}
                 <View
                   style={[
-                    styles.pin,
-                    stop.preview && styles.previewPin,
-                    isLatest && styles.latestPin,
+                    styles.planet,
+                    index === 0 && styles.seedPlanet,
+                    isCurrent && styles.currentPlanet,
                   ]}
                 >
-                  <Text style={styles.pinNumber}>{index + 1}</Text>
+                  <Text style={styles.planetOrder}>{index + 1}</Text>
                 </View>
                 <Text
                   style={[
-                    styles.pinLabel,
-                    stop.preview && styles.previewPinLabel,
-                    isLatest && styles.latestPinLabel,
+                    styles.planetLabel,
+                    isCurrent && styles.currentPlanetLabel,
                   ]}
                 >
-                  {stop.flag} {stop.city}
+                  {stop.city}
                 </Text>
               </View>
             );
           })}
         </View>
 
-        <View style={styles.stats}>
-          <View style={styles.statBox}>
-            <Text style={styles.statValue}>{activeStops.length}</Text>
-            <Text style={styles.statLabel}>Stops</Text>
+        <View style={styles.currentCard}>
+          <RipplePill>Current location</RipplePill>
+          <Text style={styles.currentCity}>{currentStop.city}</Text>
+          <Text style={styles.currentText}>
+            이 순간이 지금 머무는 작은 행성입니다.
+          </Text>
+        </View>
+
+        <View style={styles.statsGrid}>
+          {mapStats.map(([label, value]) => (
+            <View key={label} style={styles.statBox}>
+              <Text style={styles.statValue}>{value}</Text>
+              <Text style={styles.statLabel}>{label}</Text>
+            </View>
+          ))}
+        </View>
+      </RippleCard>
+
+      <RippleCard style={styles.journeyCard}>
+        <View style={styles.journeyTop}>
+          <View>
+            <RippleLabel>Your Journey</RippleLabel>
+            <Text style={styles.journeyTitle}>{moment}</Text>
           </View>
-          <View style={styles.statBox}>
-            <Text style={styles.statValue}>
-              {new Set(activeStops.map((stop) => stop.country)).size}
-            </Text>
-            <Text style={styles.statLabel}>Countries</Text>
+          <RipplePill>17 people</RipplePill>
+        </View>
+
+        <View style={styles.routeList}>
+          {journeyStops.map((stop, index) => (
+            <View key={`route-${stop.city}`} style={styles.routeItem}>
+              <View style={styles.routeDot} />
+              <Text style={styles.routeCity}>{stop.city}</Text>
+              {index < journeyStops.length - 1 ? (
+                <Text style={styles.routeArrow}>→</Text>
+              ) : null}
+            </View>
+          ))}
+        </View>
+
+        <View style={styles.journeyMeta}>
+          <View style={styles.metaBox}>
+            <Text style={styles.metaLabel}>Started</Text>
+            <Text style={styles.metaValue}>12 days ago</Text>
           </View>
-          <View style={styles.statBox}>
-            <Text style={styles.statValue}>{latestStop.city}</Text>
-            <Text style={styles.statLabel}>Latest</Text>
+          <View style={styles.metaBox}>
+            <Text style={styles.metaLabel}>Participants</Text>
+            <Text style={styles.metaValue}>17</Text>
           </View>
         </View>
       </RippleCard>
 
-      <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>Journey order</Text>
-        <Text style={styles.sectionSubtitle}>이어진 순서</Text>
-      </View>
-
-      {stops.map((stop, index) => (
-        <RippleCard
-          key={`order-${stop.city}-${index}`}
-          style={[styles.stopCard, stop.preview && styles.previewStopCard]}
+      <RippleButton onPress={() => router.push("/world")}>
+        Explore More Journeys
+      </RippleButton>
+      <View style={styles.shareAction}>
+        <RippleButton
+          tone="secondary"
+          onPress={() => router.push("/share-card")}
         >
-          <View style={styles.orderBadge}>
-            <Text style={styles.orderNumber}>{index + 1}</Text>
-          </View>
-          <View style={styles.stopContent}>
-            <Text style={styles.stopPlace}>
-              {stop.flag} {stop.city}
-            </Text>
-            <Text style={styles.stopMeta}>
-              {stop.country} · {stop.time}
-            </Text>
-            <Text style={styles.stopMessage}>{stop.message}</Text>
-          </View>
-          {!stop.preview && stop.city === latestStop.city ? (
-            <RipplePill>Latest</RipplePill>
-          ) : null}
-        </RippleCard>
-      ))}
+          공유 카드 보기
+        </RippleButton>
+      </View>
+      <BottomNavigation />
     </RippleScreen>
   );
 }
@@ -280,144 +179,247 @@ const styles = StyleSheet.create({
   mapCard: {
     padding: 22,
   },
-  mapTop: {
+  mapIntro: {
     flexDirection: "row",
+    alignItems: "flex-start",
     justifyContent: "space-between",
-    gap: 14,
+    gap: 16,
     marginBottom: 18,
   },
   mapTitle: {
+    fontSize: 28,
+    lineHeight: 34,
+    fontWeight: "900",
+    color: rippleColors.ink,
+  },
+  cosmicMap: {
+    height: 430,
+    borderRadius: 34,
+    backgroundColor: "rgba(255,246,238,0.94)",
+    overflow: "hidden",
+    position: "relative",
+    marginBottom: 16,
+  },
+  orbitRing: {
+    position: "absolute",
+    borderRadius: 999,
+    borderWidth: 1.4,
+  },
+  orbitOuter: {
+    width: 420,
+    height: 260,
+    left: -18,
+    top: 70,
+    borderColor: "rgba(255,138,61,0.2)",
+    transform: [{ rotate: "-18deg" }],
+  },
+  orbitMiddle: {
+    width: 330,
+    height: 330,
+    left: 42,
+    top: 36,
+    borderColor: "rgba(34,34,34,0.08)",
+    transform: [{ rotate: "26deg" }],
+  },
+  orbitInner: {
+    width: 230,
+    height: 118,
+    left: 94,
+    top: 152,
+    borderColor: "rgba(255,138,61,0.17)",
+    transform: [{ rotate: "12deg" }],
+  },
+  path: {
+    position: "absolute",
+    height: 2,
+    borderRadius: 999,
+    backgroundColor: "rgba(255,138,61,0.52)",
+  },
+  pathOne: {
+    width: 118,
+    left: 80,
+    top: 132,
+    transform: [{ rotate: "15deg" }],
+  },
+  pathTwo: {
+    width: 128,
+    left: 120,
+    top: 213,
+    transform: [{ rotate: "123deg" }],
+  },
+  pathThree: {
+    width: 128,
+    left: 146,
+    top: 290,
+    transform: [{ rotate: "4deg" }],
+  },
+  pathFour: {
+    width: 160,
+    left: 224,
+    top: 220,
+    backgroundColor: "rgba(34,34,34,0.14)",
+    transform: [{ rotate: "-63deg" }],
+  },
+  travelGlow: {
+    position: "absolute",
+    width: 9,
+    height: 9,
+    borderRadius: 999,
+    backgroundColor: rippleColors.blush,
+    shadowColor: rippleColors.blush,
+    shadowOpacity: 0.36,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 0 },
+  },
+  travelGlowOne: {
+    left: 180,
+    top: 150,
+    opacity: 0.75,
+  },
+  travelGlowTwo: {
+    left: 174,
+    top: 264,
+    opacity: 0.44,
+  },
+  travelGlowThree: {
+    right: 82,
+    top: 156,
+    opacity: 0.62,
+  },
+  planetWrap: {
+    position: "absolute",
+    alignItems: "center",
+    transform: [{ translateX: -36 }, { translateY: -22 }],
+    minWidth: 72,
+  },
+  currentHalo: {
+    position: "absolute",
+    width: 78,
+    height: 78,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: "rgba(255,138,61,0.26)",
+    top: -18,
+  },
+  planet: {
+    width: 38,
+    height: 38,
+    borderRadius: 999,
+    backgroundColor: rippleColors.ink,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 4,
+    borderColor: rippleColors.paper,
+  },
+  seedPlanet: {
+    backgroundColor: rippleColors.peach,
+  },
+  currentPlanet: {
+    width: 52,
+    height: 52,
+    backgroundColor: rippleColors.blush,
+    shadowColor: rippleColors.blush,
+    shadowOpacity: 0.26,
+    shadowRadius: 18,
+    shadowOffset: { width: 0, height: 8 },
+  },
+  planetOrder: {
+    fontSize: 13,
+    fontWeight: "900",
+    color: "#FFFFFF",
+  },
+  planetLabel: {
+    marginTop: 7,
+    paddingHorizontal: 9,
+    paddingVertical: 5,
+    borderRadius: 999,
+    backgroundColor: "rgba(255,249,244,0.86)",
+    fontSize: 12,
+    lineHeight: 15,
+    fontWeight: "900",
+    color: rippleColors.ink,
+    textAlign: "center",
+  },
+  currentPlanetLabel: {
+    color: rippleColors.blush,
+  },
+  starOne: {
+    position: "absolute",
+    width: 5,
+    height: 5,
+    borderRadius: 999,
+    backgroundColor: rippleColors.blush,
+    left: 54,
+    top: 54,
+    opacity: 0.4,
+  },
+  starTwo: {
+    position: "absolute",
+    width: 4,
+    height: 4,
+    borderRadius: 999,
+    backgroundColor: rippleColors.ink,
+    right: 58,
+    top: 76,
+    opacity: 0.18,
+  },
+  starThree: {
+    position: "absolute",
+    width: 7,
+    height: 7,
+    borderRadius: 999,
+    backgroundColor: rippleColors.blush,
+    left: 70,
+    bottom: 62,
+    opacity: 0.26,
+  },
+  starFour: {
+    position: "absolute",
+    width: 4,
+    height: 4,
+    borderRadius: 999,
+    backgroundColor: rippleColors.ink,
+    right: 108,
+    bottom: 48,
+    opacity: 0.16,
+  },
+  currentCard: {
+    borderRadius: 24,
+    backgroundColor: rippleColors.cardSoft,
+    padding: 18,
+    marginBottom: 14,
+  },
+  currentCity: {
+    marginTop: 8,
     fontSize: 25,
     lineHeight: 31,
     fontWeight: "900",
     color: rippleColors.ink,
   },
-  mapSubtitle: {
-    marginTop: 6,
+  currentText: {
+    marginTop: 5,
     fontSize: 14,
     lineHeight: 20,
     fontWeight: "700",
     color: rippleColors.muted,
   },
-  worldMap: {
-    height: 260,
-    borderRadius: 26,
-    backgroundColor: "#FFF1E5",
-    overflow: "hidden",
-    position: "relative",
-    marginBottom: 18,
-  },
-  land: {
-    position: "absolute",
-    backgroundColor: "rgba(248,231,216,0.95)",
-    borderRadius: 999,
-  },
-  landAmerica: {
-    width: 112,
-    height: 150,
-    left: 30,
-    top: 50,
-    transform: [{ rotate: "-16deg" }],
-  },
-  landEurope: {
-    width: 72,
-    height: 60,
-    left: 170,
-    top: 68,
-    transform: [{ rotate: "12deg" }],
-  },
-  landAsia: {
-    width: 146,
-    height: 112,
-    right: 28,
-    top: 62,
-    transform: [{ rotate: "-8deg" }],
-  },
-  landAustralia: {
-    width: 74,
-    height: 44,
-    right: 52,
-    bottom: 40,
-    transform: [{ rotate: "10deg" }],
-  },
-  routeLine: {
-    position: "absolute",
-    height: 3,
-    borderRadius: 999,
-    backgroundColor: rippleColors.blush,
-    opacity: 0.7,
-    transformOrigin: "left center",
-  },
-  previewLine: {
-    opacity: 0.2,
-  },
-  pinWrap: {
-    position: "absolute",
-    alignItems: "center",
-    transform: [{ translateX: -28 }, { translateY: -18 }],
-    minWidth: 56,
-  },
-  pin: {
-    width: 29,
-    height: 29,
-    borderRadius: 999,
-    backgroundColor: rippleColors.ink,
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 3,
-    borderColor: rippleColors.paper,
-  },
-  latestPin: {
-    width: 38,
-    height: 38,
-    backgroundColor: rippleColors.blush,
-    shadowColor: rippleColors.blush,
-    shadowOpacity: 0.28,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 5 },
-  },
-  previewPin: {
-    backgroundColor: "rgba(34,34,34,0.24)",
-  },
-  pinNumber: {
-    fontSize: 12,
-    fontWeight: "900",
-    color: "#FFFFFF",
-  },
-  pinLabel: {
-    marginTop: 4,
-    paddingHorizontal: 7,
-    paddingVertical: 3,
-    borderRadius: 999,
-    backgroundColor: "rgba(255,249,244,0.84)",
-    fontSize: 11,
-    lineHeight: 14,
-    fontWeight: "900",
-    color: rippleColors.ink,
-    textAlign: "center",
-  },
-  latestPinLabel: {
-    color: rippleColors.blush,
-  },
-  previewPinLabel: {
-    color: rippleColors.soft,
-  },
-  stats: {
+  statsGrid: {
     flexDirection: "row",
+    flexWrap: "wrap",
     gap: 10,
   },
   statBox: {
-    flex: 1,
-    minHeight: 76,
-    borderRadius: 18,
-    backgroundColor: rippleColors.cardSoft,
+    width: "48%",
+    minHeight: 86,
+    borderRadius: 22,
+    backgroundColor: "rgba(255,249,244,0.82)",
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 8,
   },
   statValue: {
-    fontSize: 18,
-    lineHeight: 23,
+    fontSize: 24,
+    lineHeight: 30,
     fontWeight: "900",
     color: rippleColors.ink,
     textAlign: "center",
@@ -425,69 +427,86 @@ const styles = StyleSheet.create({
   statLabel: {
     marginTop: 5,
     fontSize: 11,
-    lineHeight: 14,
+    lineHeight: 15,
     fontWeight: "900",
-    color: rippleColors.muted,
+    color: rippleColors.blush,
     textTransform: "uppercase",
     textAlign: "center",
   },
-  sectionHeader: {
-    marginTop: 4,
-    marginBottom: 12,
+  journeyCard: {
+    padding: 22,
   },
-  sectionTitle: {
-    fontSize: 20,
+  journeyTop: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
+    gap: 14,
+    marginBottom: 18,
+  },
+  journeyTitle: {
+    fontSize: 24,
+    lineHeight: 31,
     fontWeight: "900",
     color: rippleColors.ink,
   },
-  sectionSubtitle: {
-    marginTop: 4,
-    fontSize: 13,
-    fontWeight: "800",
-    color: rippleColors.soft,
+  routeList: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "center",
+    rowGap: 10,
+    marginBottom: 18,
   },
-  stopCard: {
+  routeItem: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 13,
   },
-  previewStopCard: {
-    opacity: 0.58,
-  },
-  orderBadge: {
-    width: 34,
-    height: 34,
+  routeDot: {
+    width: 9,
+    height: 9,
     borderRadius: 999,
-    backgroundColor: rippleColors.blushSoft,
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: rippleColors.blush,
+    marginRight: 7,
   },
-  orderNumber: {
-    fontSize: 13,
-    fontWeight: "900",
-    color: rippleColors.blush,
-  },
-  stopContent: {
-    flex: 1,
-  },
-  stopPlace: {
-    fontSize: 17,
-    lineHeight: 23,
+  routeCity: {
+    fontSize: 16,
+    lineHeight: 22,
     fontWeight: "900",
     color: rippleColors.ink,
   },
-  stopMeta: {
-    marginTop: 3,
-    fontSize: 12,
-    lineHeight: 16,
-    fontWeight: "800",
+  routeArrow: {
+    marginHorizontal: 9,
+    fontSize: 18,
+    lineHeight: 22,
+    fontWeight: "900",
     color: rippleColors.soft,
   },
-  stopMessage: {
-    marginTop: 6,
-    fontSize: 14,
-    lineHeight: 20,
-    fontWeight: "700",
-    color: rippleColors.muted,
+  journeyMeta: {
+    flexDirection: "row",
+    gap: 10,
+  },
+  metaBox: {
+    flex: 1,
+    minHeight: 74,
+    borderRadius: 20,
+    backgroundColor: rippleColors.cardSoft,
+    justifyContent: "center",
+    paddingHorizontal: 16,
+  },
+  metaLabel: {
+    fontSize: 12,
+    lineHeight: 16,
+    fontWeight: "900",
+    color: rippleColors.soft,
+    textTransform: "uppercase",
+  },
+  metaValue: {
+    marginTop: 5,
+    fontSize: 18,
+    lineHeight: 24,
+    fontWeight: "900",
+    color: rippleColors.ink,
+  },
+  shareAction: {
+    marginTop: 12,
   },
 });

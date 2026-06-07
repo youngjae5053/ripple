@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 
+import { BottomNavigation } from "@/components/bottom-navigation";
 import {
   RippleBackButton,
   RippleButton,
@@ -159,6 +160,20 @@ export default function WorldScreen() {
       ))}
 
       <View style={styles.actions}>
+        <RippleButton
+          onPress={() =>
+            router.push({
+              pathname: "/journey-map",
+              params: {
+                text: "친구에게 안부를 물었어요",
+                place: "Tokyo, Japan",
+                continued: "true",
+              },
+            })
+          }
+        >
+          Explore Journey Map
+        </RippleButton>
         <RippleButton onPress={() => router.push("/create")}>
           Start a Ripple · 리플 시작하기
         </RippleButton>
@@ -166,6 +181,7 @@ export default function WorldScreen() {
           My Ripples · 내 리플 보기
         </RippleButton>
       </View>
+      <BottomNavigation />
     </RippleScreen>
   );
 }
